@@ -1,11 +1,12 @@
 import xFetch from './xFetch';
+const rootUrl = 'http://localhost:8888';
 
 const compayControl = {
   getAll : async function getAll() {
-    return xFetch('http://localhost:8888/companys/', {method: 'GET'})
+    return xFetch(`${rootUrl}/companys/`, {method: 'GET'})
   },
   getIndustry : async function getIndustry() {
-    return xFetch('http://localhost:8888/industry/', {method: 'GET'})
+    return xFetch(`${rootUrl}/industry/`, {method: 'GET'})
   }
 }
 

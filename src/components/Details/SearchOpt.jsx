@@ -11,15 +11,16 @@ const SearchOpt = ({
   onEndChange,
   handleStartToggle,
   handleEndToggle,
-  options
+  queryOptions
 }) => {
-  const {startValue, endValue, endOpen, Industrys} = options;
-  const children = Industrys.map((item) => {
+  const {byDate,byIndustry,byPage} = queryOptions;
+  const {startValue, endValue, endOpen} = byDate;
+  const {allIndustrys} = byIndustry;
+  const children = allIndustrys.map((item) => {
     return (<Option key={item.industry}>
       {item.industry}
     </Option>)
   });
-  console.log(children);
   return (
     <div className={styles.queryOption}>
       <Tooltip title="以行业维度显示报活数据">
@@ -34,7 +35,6 @@ const SearchOpt = ({
       <MonthPicker disabledDate={disabledStartDate} format="yyyy-MM" placeholder="开始月份" onChange={onStartChange} toggleOpen={handleStartToggle}/>
       <span className={styles.note_text}>-</span>
       <MonthPicker disabledDate={disabledEndDate} format="yyyy-MM" placeholder="结束月份" open={endOpen} onChange={onEndChange} toggleOpen={handleEndToggle}/>
-
     </div>
   );
 };
@@ -42,7 +42,7 @@ SearchOpt.propTypes = {
   disabledStartDate: PropTypes.func.isRequired,
   disabledEndDate: PropTypes.func.isRequired,
   onStartChange: PropTypes.func.isRequired,
-  options: PropTypes.object.isRequired,
+  queryOptions: PropTypes.object.isRequired,
   handleStartToggle: PropTypes.func.isRequired,
   handleEndToggle: PropTypes.func.isRequired,
   onEndChange: PropTypes.func.isRequired

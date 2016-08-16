@@ -7,7 +7,6 @@ const mylayout = handleActions({
     return {...state , collapse:!state.collapse};
   },
 },{
-  testadd : ['1'],
   collapse: true
 });
 

@@ -4,93 +4,71 @@ import {
 import {
   combineReducer
 } from 'redux';
+var u = require('updeep');
+
+const companyEntity = {
+  companyList: [],
+  loading: false,
+  queryOptions: {
+    byDate: {
+      startValue: {
+        date: new Date()
+      },
+      endValue: {
+        date: new Date()
+      },
+      endOpen: false,
+    },
+    byIndustry: {
+      allIndustrys: [],
+      industry: null,
+      loading: false
+    },
+    byPage: {
+
+    }
+  }
+};
 
 const company = handleActions({
   ['company/getAllCompany'](state) {
-    return {...state,
-      loading: true,
-    };
+    return u({
+      loading: true
+    }, companyEntity);
   },
   ['company/getAllCompany/success'](state, action) {
-    return {...state,
-      list: action.payload,
-      loading: false,
-    };
+    return u({
+      companyList: action.payload,
+      loading: false
+    }, state);
   },
   ['company/getAllCompany/failed'](state, action) {
-    return {...state,
+    return u({
       err: action.err,
-      loading: false,
-    };
-  },
-  ['company/getAllCompany/failed'](state, action) {
-    return {...state,
-      err: action.err,
-      loading: false,
-    };
+      loading: false
+    }, state);
   },
   ['companyOpt/set/ChangeStartMon'](state, action) {
-    const startValue = action.payload;
-    return {...state,
-      options: {...state.options,
-        startValue: startValue
-      }
-    };
+    return u.updateIn('queryOptions.byDate.startValue', action.payload, state);
+
   },
   ['companyOpt/set/ChangeEndMon'](state, action) {
-    const endValue = action.payload;
-    return {...state,
-      options: {...state.options,
-        endValue: endValue
-      }
-    };
+    return u.updateIn('queryOptions.byDate.endValue', action.payload, state);
   },
   ['companyOpt/set/endOpen'](state, action) {
-    return {...state,
-      options: {...state.options,
-        endOpen: action.payload
-      }
-    };
+    return u.updateIn('queryOptions.byDate.endOpen', action.payload, state);
   },
   ['company/getIndustrys'](state) {
-    return {...state,
-      options: {...state.options,
-        loading: true,
-      }
 
-    };
+    return u.updateIn('queryOptions.byIndustry.loading', true, state);
   },
   ['company/getIndustrys/success'](state, action) {
-    return {...state,
-      options: {...state.options,
-        Industrys: action.payload,
-        loading: false
-      }
-    };
-  },
 
+    const result = u.updateIn('queryOptions.byIndustry.allIndustrys', action.payload, state);
+    return u.updateIn('queryOptions.byIndustry.loading', false, result);
+  },
   ['companyOpt/set/ChangeIndustry'](state, action) {
-    const endValue = action.payload;
-    return {...state,
-      options: {...state.options,
-        endValue: endValue
-      }
-    };
+    return u.updateIn('queryOptions.byIndustry.industry', action.payload, state);
   },
-}, {
-  list: [],
-  loading: false,
-  options: {
-    startValue: {
-      date: new Date()
-    },
-    endValue: {
-      date: new Date()
-    },
-    endOpen: false,
-    byIndustry: null,
-    Industrys: []
-  }
-});
-
+}, companyEntity);
 export default company;

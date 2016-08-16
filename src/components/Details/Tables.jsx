@@ -6,10 +6,7 @@ const DetailTable = ({data}) => {
     {
       title: '企业名称',
       dataIndex: 'name',
-      // render(id) {
-      //   return <a href=`/company/${id}`>{id}</a>;
-      // },
-      width: 300
+      width: 200
     }, {
       title: '行业',
       dataIndex: 'industry',

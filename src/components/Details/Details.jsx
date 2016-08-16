@@ -5,8 +5,8 @@ import SearchOpt from './SearchOpt';
 import {connect} from 'react-redux';
 
 const Details = (props) => {
-  const {company, options, dispatch} = props;
-  const {startValue, endValue, endOpen} = options;
+  const {companyList, queryOptions, dispatch} = props;
+  const {startValue, endValue, endOpen} = queryOptions.byDate;
 
   const disabledStartDate = (startValue) => {
     if (!startValue || !endValue.date) {
@@ -66,7 +66,7 @@ const Details = (props) => {
   return (
     <div>
       <SearchOpt
-        options = {options}
+        queryOptions = {queryOptions}
         disabledStartDate = {disabledStartDate}
         disabledEndDate = {disabledEndDate}
         onStartChange = {onStartChange}
@@ -74,23 +74,23 @@ const Details = (props) => {
         handleStartToggle = {handleStartToggle}
         handleEndToggle = {handleEndToggle}
       />
-      <DetailTable data = {company}/>
+      <DetailTable data = {companyList}/>
     </div>
   );
 };
 
 Details.propTypes = {};
 
-const conver = (companies) => {
-  const newList = companies.list.map(company => {
-    return {name: company.company, industry: company.industry, region: company.region}
+const conver = (data) => {
+  const newList = data.companyList.map(item => {
+    return {name: item.company, industry: item.industry, region: item.region}
   });
   return newList;
 }
 
-function mapStateToProps(valus) {
-  const {companys} = valus;
-  return {company: conver(companys), options:companys.options};
+function mapStateToProps(value) {
+  const {companys} = value;
+  return {companyList: conver(companys), queryOptions:companys.queryOptions};
 }
 
 export default connect(mapStateToProps)(Details);
