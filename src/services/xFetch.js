@@ -18,11 +18,17 @@ function check404(res) {
 }
 
 function jsonParse(res) {
-  return res.json().then(jsonResult => ({ ...res, jsonResult }));
+  const data = res.json().then(jsonResult => ({...res,
+    jsonResult
+  }));
+  return data ;
 }
 
 function errorMessageParse(res) {
-  const { success, message } = res.jsonResult;
+  const {
+    success,
+    message
+  } = res.jsonResult;
   if (!success) {
     return Promise.reject(message);
   }
@@ -30,12 +36,12 @@ function errorMessageParse(res) {
 }
 
 function xFetch(url, options) {
-  const opts = { ...options };
+  const opts = {...options
+  };
   opts.headers = {
     ...opts.headers,
     authorization: cookie.get('authorization') || '',
   };
-
   return fetch(url, opts)
     .then(check401)
     .then(check404)

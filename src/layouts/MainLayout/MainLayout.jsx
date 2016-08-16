@@ -22,15 +22,6 @@ const MainLayout = (props) => {
   }
 
   const _loctionPath = location.pathname;
-  console.log([_loctionPath]);
-
-  componentWillReceiveProps : (next)=>{
-    console.log("next:" , next);
-  };
-
-  componentWillMount : (state)=>{
-    console.log("state:" , state);
-  }
 
   return (
     <div className={collapseSytle}>
@@ -42,19 +33,25 @@ const MainLayout = (props) => {
               <span className={styles.nav_text}>概览</span>
             </Link>
           </Menu.Item>
-          <Menu.Item key="/actived">
-            <Link to="/actived"><Icon type="line-chart"/>
+          <Menu.Item key="/details">
+            <Link to="/details"><Icon type="line-chart"/>
               <span className={styles.nav_text}>分析</span>
             </Link>
           </Menu.Item>
+          <Menu.Item key="/settings">
+            <Link to="/settings"><Icon type="setting"/>
+              <span className={styles.nav_text}>设置</span>
+            </Link>
+          </Menu.Item>
+
           <Menu.Item key="/completed">
-            <Link to="/completed"><Icon type="notification"/>
-              <span className={styles.nav_text}>通知</span>
+            <Link to="/completed"><Icon type="check-circle" />
+              <span className={styles.nav_text}>未完成</span>
             </Link>
           </Menu.Item>
           <Menu.Item key="setting">
-            <Link to="/completed/3"><Icon type="setting"/>
-              <span className={styles.nav_text}>设置</span>
+            <Link to="/completed/3"><Icon type="info-circle-o" />
+              <span className={styles.nav_text}>测试项</span>
             </Link>
           </Menu.Item>
         </Menu>

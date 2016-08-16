@@ -9,16 +9,24 @@ module.exports = {
         data: [
           {
             id: 1,
-            text: 'Learn antd',
+            text: '定制模板布局',
             isComplete: true,
           },
           {
             id: 2,
-            text: 'Learn ant-tool',
+            text: 'demo for redux by sagas/action ',
           },
           {
             id: 3,
-            text: 'Learn dora',
+            text: 'demo for react-router ',
+          },
+          {
+            id: 4,
+            text: '分级页面设计',
+          },
+          {
+            id: 5,
+            text: '数据访问',
           },
         ],
       });
