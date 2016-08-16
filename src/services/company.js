@@ -7,7 +7,11 @@ const compayControl = {
   },
   getIndustry : async function getIndustry() {
     return xFetch(`${rootUrl}/industry/`, {method: 'GET'})
+  },
+  getAllCompanybyQuery : async function getAllCompanybyQuery(query){
+    return xFetch(`${rootUrl}/companys/industries/${query}`, {method: 'GET'})
   }
+
 }
 
 export default compayControl;

@@ -1,14 +1,28 @@
 import { takeLatest } from 'redux-saga';
-import { take, call, put, fork, cancel } from 'redux-saga/effects';
-import { getAll ,getIndustry} from '../services/company';
-import { message } from 'antd';
+import {
+  take,
+  call,
+  put,
+  fork,
+  cancel
+} from 'redux-saga/effects';
+import {
+  getAll,
+  getIndustry,
+  getAllCompanybyQuery
+} from '../services/company';
+import {
+  message
+} from 'antd';
 
 function* getAllCompany() {
   try {
-    const { jsonResult } = yield call(getAll);
+    const {
+      jsonResult
+    } = yield call(getAll);
     if (jsonResult.companys) {
       yield put({
-        type: 'company/getAllCompany/success',
+        type: 'company/get/companies/success',
         payload: jsonResult.companys,
       });
     }
@@ -21,12 +35,37 @@ function* getAllCompany() {
   }
 }
 
+function* getAllbyQuery() {
+  const {query} = arguments[0];
+  try {
+    const {
+      jsonResult
+    } = yield call(getAllCompanybyQuery, query);
+    if (jsonResult.companys) {
+      yield put({
+        type: 'company/get/companiesByquery/success',
+        payload: jsonResult.companys,
+      });
+    }
+  } catch (err) {
+    message.error(err);
+    cancel
+    //yield put({
+    //  type: 'todos/get/failed',
+    //  err,
+    //});
+  }
+}
+
+
 function* getIndustrys() {
   try {
-    const { jsonResult } = yield call(getIndustry);
+    const {
+      jsonResult
+    } = yield call(getIndustry);
     if (jsonResult.industries) {
       yield put({
-        type: 'company/getIndustrys/success',
+        type: 'queryOpt/get/industrys/success',
         payload: jsonResult.industries,
       });
     }
@@ -39,23 +78,32 @@ function* getIndustrys() {
   }
 }
 
+function* watchCompanyGetByQuery() {
+  // const action =  yield take('company/get/companiesByquery');
+  // console.log(action);
+  // const test = [].concat(action);
+  // console.log(test);
+  yield takeLatest('company/get/companiesByquery', getAllbyQuery)
+}
+
 function* watchCompanyGet() {
-  yield takeLatest('company/getAllCompany', getAllCompany)
+  yield takeLatest('company/get/companies', getAllCompany)
 }
 
 function* watchIndustryGet() {
-  yield takeLatest('company/getIndustrys', getIndustrys)
+  yield takeLatest('queryOpt/get/industrys', getIndustrys)
 }
 
-export default function* () {
+export default function*() {
   yield fork(watchCompanyGet);
   yield fork(watchIndustryGet);
+  yield fork(watchCompanyGetByQuery);
   // Load companies.
   yield put({
-    type: 'company/getAllCompany',
+    type: 'company/get/companies',
   });
   yield put({
-    type: 'company/getIndustrys',
+    type: 'queryOpt/get/industrys',
   });
 
 

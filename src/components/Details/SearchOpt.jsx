@@ -11,30 +11,33 @@ const SearchOpt = ({
   onEndChange,
   handleStartToggle,
   handleEndToggle,
-  queryOptions
+  queryOptions,
+  onOptionChange
 }) => {
-  const {byDate,byIndustry,byPage} = queryOptions;
+  const {byDate, byIndustry} = queryOptions;
   const {startValue, endValue, endOpen} = byDate;
-  const {allIndustrys} = byIndustry;
+  const {allIndustrys,industry} = byIndustry;
   const children = allIndustrys.map((item) => {
-    return (<Option key={item.industry}>
-      {item.industry}
-    </Option>)
+    return (
+      <Option key={item.industry}>
+        {item.industry}
+      </Option>
+    )
   });
   return (
     <div className={styles.queryOption}>
       <Tooltip title="以行业维度显示报活数据">
         <span className={styles.labelNote}>选择行业</span>
       </Tooltip>
-      <Select defaultValue="政府" className={styles.select}>
+      <Select defaultValue={industry || "政府"} className={styles.select} onChange={onOptionChange}>
         {children}
       </Select>
       <Tooltip title="选择范围后会显示该范文内的报活数据">
         <span className={styles.labelNote}>选择月份范围</span>
       </Tooltip>
-      <MonthPicker disabledDate={disabledStartDate} format="yyyy-MM" placeholder="开始月份" onChange={onStartChange} toggleOpen={handleStartToggle}/>
+      <MonthPicker disabledDate={disabledStartDate} value={startValue.date} format="yyyy-MM" placeholder="开始月份" onChange={onStartChange} toggleOpen={handleStartToggle}/>
       <span className={styles.note_text}>-</span>
-      <MonthPicker disabledDate={disabledEndDate} format="yyyy-MM" placeholder="结束月份" open={endOpen} onChange={onEndChange} toggleOpen={handleEndToggle}/>
+      <MonthPicker disabledDate={disabledEndDate} value={endValue.date} format="yyyy-MM" placeholder="结束月份" open={endOpen} onChange={onEndChange} toggleOpen={handleEndToggle}/>
     </div>
   );
 };
@@ -45,6 +48,7 @@ SearchOpt.propTypes = {
   queryOptions: PropTypes.object.isRequired,
   handleStartToggle: PropTypes.func.isRequired,
   handleEndToggle: PropTypes.func.isRequired,
-  onEndChange: PropTypes.func.isRequired
+  onEndChange: PropTypes.func.isRequired,
+  onOptionChange : PropTypes.func.isRequired,
 }
 export default SearchOpt;
