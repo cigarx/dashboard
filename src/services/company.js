@@ -1,17 +1,17 @@
 import xFetch from './xFetch';
-const rootUrl = 'http://localhost:8888';
+import { rootUrl } from  './Constant'
 
 const compayControl = {
-  getAll : async function getAll() {
-    return xFetch(`${rootUrl}/companys/`, {method: 'GET'})
-  },
   getIndustry : async function getIndustry() {
-    return xFetch(`${rootUrl}/industry/`, {method: 'GET'})
+    return xFetch(`${rootUrl}/api/industry/`, {method: 'GET'})
   },
-  getAllCompanybyQuery : async function getAllCompanybyQuery(query){
-    return xFetch(`${rootUrl}/companys/industries/${query}`, {method: 'GET'})
+  companysByQuery : async (queryParam) => {
+    console.log(`${rootUrl}/api/companys/?${queryParam}`);
+    return xFetch(`${rootUrl}/api/companys/?${queryParam}`, {method: 'GET'})
+  },
+  getLineDataByCompany: async(companyid) =>{
+    return xFetch(`${rootUrl}/api/report/linedata/${companyid}`, {method: 'GET'})
   }
-
 }
 
 export default compayControl;

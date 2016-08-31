@@ -1,25 +1,96 @@
 import React, { Component, PropTypes } from 'react';
 import ReactEcharts from 'echarts-for-react';
 
-const LineChart = () => {
-  const option = {
-            tooltip: {},
-            legend: {
-                data:['使用量']
+const LineChart = ({title,lineData}) => {
+  const {day,install,active} = lineData.data
+  let option = {
+        title: {
+            text:title
+        },
+        legend: {
+          data:['安装量','报活量']
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        xAxis:  {
+            type: 'category',
+            boundaryGap: false,
+            data:day
+        },
+        yAxis: [
+          {
+            name: '报活量数据轴',
+            type: 'value',
+          },
+          {
+            name: '安装量数据轴',
+            type: 'value'
+          }
+
+        ],
+        series: [
+            {
+                name:'安装量',
+                type:'line',
+                data:install,
+                yAxisIndex:1,
+                markLine: {
+                    data: [
+                        {type: 'average', name: '平均值'},
+                        [
+                          {
+                              type: 'min'
+                          },
+                          {
+                              name: '最小值到最大值',
+                              type: 'max'
+                          }
+                      ],
+                    ]
+                }
             },
-            xAxis: {
-                data: ["一月","二月","三月","四月","五月","六月"]
-            },
-            yAxis: {},
-            series: [{
-                name: '使用量',
-                type: 'line',
-                data: [5, 20, 36, 10, 10, 20]
-            }]
+            {
+                name:'报活量',
+                type:'line',
+                data:active,
+                markLine: {
+                    data: [
+                        {type: 'average', name: '平均值'},
+                        [
+                          {
+                              type: 'min'
+                          },
+                          {
+                              name: '最小值到最大值',
+                              type: 'max'
+                          }
+                      ],
+                    ]
+                }
+            }
+        ]
         };
+if(lineData.show){
+  option = {...option,
+      dataZoom: [
+              {
+                  show: true,
+                  realtime: true,
+                  startValue: lineData.startValue,
+                  endValue: lineData.endValue
+              },
+              {
+                  type: 'inside',
+                  realtime: true,
+                  startValue: lineData.startValue,
+                  endValue: lineData.endValue
+              }
+          ],}
+}
   return (
-    <ReactEcharts option={option} style={{
-      height: 300
+    <ReactEcharts option={option} showLoading={lineData.loading} style={{
+      height: 400
     }}/>
   );
 };

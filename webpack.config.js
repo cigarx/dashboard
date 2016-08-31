@@ -17,6 +17,12 @@ module.exports = function(webpackConfig) {
   //   test: /\.jsx?$/,
   //   loader: 'es3ify-loader',
   // });
+  
+  // Enable this if have to support font
+  // webpackConfig.module.loaders.unshift({
+  //   test: /\.woff$/,
+  //   loader: 'url?limit=100000',
+  // });
 
   // Parse all less files as css module.
   webpackConfig.module.loaders.forEach(function(loader, index) {

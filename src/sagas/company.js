@@ -7,49 +7,79 @@ import {
   cancel
 } from 'redux-saga/effects';
 import {
-  getAll,
   getIndustry,
-  getAllCompanybyQuery
+  companysByQuery,
+  getLineDataByCompany
 } from '../services/company';
 import {
   message
 } from 'antd';
 
-function* getAllCompany() {
-  try {
-    const {
-      jsonResult
-    } = yield call(getAll);
-    if (jsonResult.companys) {
-      yield put({
-        type: 'company/get/companies/success',
-        payload: jsonResult.companys,
-      });
+
+function* getLineData(...args) {
+
+  const companyId = args[0].query;
+
+  if(companyId){
+
+    try {
+      const {jsonResult} = yield call(getLineDataByCompany,companyId);
+      console.log(jsonResult);
+      if (jsonResult.success) {
+        yield put({
+          type: 'company/get/linedata/success',
+          payload: jsonResult.data
+        });
+      }
+    } catch (err) {
+      message.error(err);
+      //yield put({
+      //  type: 'todos/get/failed',
+      //  err,
+      //});
     }
-  } catch (err) {
-    message.error(err);
-    //yield put({
-    //  type: 'todos/get/failed',
-    //  err,
-    //});
   }
 }
+function* getCompanys(...args) {
 
-function* getAllbyQuery() {
-  const {query} = arguments[0];
+  const query = args[0].query;
+  let queryStr = "";
+  if(query && query.byDate){
+    let year = query.byDate.getFullYear();
+    let month = query.byDate.getMonth() + 1;
+    queryStr = queryStr + `&startDate=${year},${month}`
+  }
+  if(query && query.byPage){
+    let start = (query.byPage.current - 1) * query.byPage.pageSize ;
+    let limit = query.byPage.pageSize;
+    queryStr += `&start=${start}&limit=${limit}`
+  }
+  if(query && query.byIndustry && query.byIndustry.industry){
+    let industry = query.byIndustry.industry;
+    queryStr += `&industry=${industry}`
+  }
+  if(query && query.sorter && query.sorter.order){
+    if(query.sorter.order == 'descend'){
+      queryStr +=`&order=descend`
+    }
+    queryStr += `&field=${query.sorter.field}`
+  }
+  if(query && query.keyword){
+    let keyword = query.keyword;
+    queryStr += `&keyword=${keyword}`
+  }
+  
   try {
-    const {
-      jsonResult
-    } = yield call(getAllCompanybyQuery, query);
-    if (jsonResult.companys) {
+    const {jsonResult} = yield call(companysByQuery,queryStr);
+    if (jsonResult.success) {
       yield put({
-        type: 'company/get/companiesByquery/success',
-        payload: jsonResult.companys,
+        type: 'company/get/companies/success',
+        payload: jsonResult.companylist,
+        total : jsonResult.byPage.total
       });
     }
   } catch (err) {
     message.error(err);
-    cancel
     //yield put({
     //  type: 'todos/get/failed',
     //  err,
@@ -63,9 +93,9 @@ function* getIndustrys() {
     const {
       jsonResult
     } = yield call(getIndustry);
-    if (jsonResult.industries) {
+    if (jsonResult.success) {
       yield put({
-        type: 'queryOpt/get/industrys/success',
+        type: 'company/queryOpt/set/industrys/success',
         payload: jsonResult.industries,
       });
     }
@@ -79,32 +109,29 @@ function* getIndustrys() {
 }
 
 function* watchCompanyGetByQuery() {
-  // const action =  yield take('company/get/companiesByquery');
-  // console.log(action);
-  // const test = [].concat(action);
-  // console.log(test);
-  yield takeLatest('company/get/companiesByquery', getAllbyQuery)
-}
-
-function* watchCompanyGet() {
-  yield takeLatest('company/get/companies', getAllCompany)
+  yield takeLatest('company/get/companies', getCompanys)
 }
 
 function* watchIndustryGet() {
-  yield takeLatest('queryOpt/get/industrys', getIndustrys)
+  yield takeLatest('company/queryOpt/set/industrys', getIndustrys)
 }
 
+function* watchGetLineData() {
+  yield takeLatest('company/get/linedata', getLineData)
+}
+
+
 export default function*() {
-  yield fork(watchCompanyGet);
   yield fork(watchIndustryGet);
   yield fork(watchCompanyGetByQuery);
-  // Load companies.
+  yield fork(watchGetLineData);
+
+  yield put({
+    type: 'company/queryOpt/set/industrys',
+  });
+
   yield put({
     type: 'company/get/companies',
   });
-  yield put({
-    type: 'queryOpt/get/industrys',
-  });
-
 
 }

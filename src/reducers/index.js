@@ -7,5 +7,4 @@ const reducers = keys.reduce((memo, key) => {
   memo[key.match(/([^\/]+)\.js$/)[1]] = context(key);
   return memo;
 }, {});
-
 export default reducers;
