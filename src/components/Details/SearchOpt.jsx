@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {Tooltip, Select, DatePicker, Row, Col,Input,Button} from 'antd';
+import {Tooltip, Select, DatePicker,Checkbox, Row, Col,Input,Button,Icon,Tag} from 'antd';
 import styles from './Details.less';
 const MonthPicker = DatePicker.MonthPicker;
 const Option = Select.Option;
@@ -9,16 +9,17 @@ const SearchOpt = ({
   queryOptions,
   onOptionChange,
   onInputChange,
-  onButtonClick
+  onButtonClick,
+  onImportant
 }) => {
-  const {byDate, byIndustry,keyword} = queryOptions;
-  const {Industries,industry,loading} = byIndustry;
+  const {byDate, byType,keyword} = queryOptions;
+  const {types,type,loading} = byType;
   let children = [];
-  if (!byIndustry.loading){
-    children = Industries.map((item) => {
+  if (!loading){
+    children = types.map((item) => {
       return (
-        <Option key={item.industry}>
-          {item.industry}
+        <Option key={item.type}>
+          {item.type}
         </Option>
       )
     });
@@ -26,22 +27,39 @@ const SearchOpt = ({
 
   return (
     <div className={styles.queryOption}>
-      <Tooltip title="以行业维度显示报活数据">
-        <span className={styles.labelNote}>选择行业</span>
-      </Tooltip>
+      <div className={styles.panel}>
+        <span className={styles.labelNote}>  <Icon type="appstore" /></span>
 
-      <Select defaultValue={industry} className={styles.select} onChange={onOptionChange}>
-        <Option key="all">
-          全部行业
-        </Option>
-        {children}
-      </Select>
+          <Button>东北区</Button>
+          <Button>华北区</Button>
+          <Button>华东区</Button>
+          <Button>华南区</Button>
+          <Button>西北区</Button>
+          <Button>西南区</Button>
+          <Button>港澳台</Button>
 
-      <Tooltip title="选择范围后会显示该范文内的报活数据">
-        <span className={styles.labelNote}>选择月份范围</span>
-      </Tooltip>
+      </div>
 
-      <MonthPicker value={byDate} format="yyyy-MM" placeholder="开始月份" onChange={onStartChange}/>
+      <div className={styles.panel}>
+        <Tooltip title="以行业维度显示报活数据">
+          <span className={styles.labelNote}>选择行业</span>
+        </Tooltip>
+
+        <Select defaultValue={type} className={styles.select} onChange={onOptionChange}>
+          <Option key="all">
+            全部行业
+          </Option>
+          {children}
+        </Select>
+
+        <Tooltip title="选择范围后会显示该范文内的报活数据">
+          <span className={styles.labelNote}>选择月份范围</span>
+        </Tooltip>
+        <MonthPicker value={byDate} format="yyyy-MM" placeholder="开始月份" onChange={onStartChange}/>
+
+        <Checkbox onChange={onImportant}>只显示重点用户</Checkbox>
+
+      </div>
 
       <div className={styles.queryKey} >
         <Tooltip title="以关键字查询企业">
@@ -59,6 +77,7 @@ SearchOpt.propTypes = {
   queryOptions: PropTypes.object.isRequired,
   onOptionChange : PropTypes.func.isRequired,
   onInputChange : PropTypes.func.isRequired,
-  onButtonClick:PropTypes.func.isRequired,
+  onButtonClick : PropTypes.func.isRequired,
+  onImportant : PropTypes.func.isRequired
 }
 export default SearchOpt;

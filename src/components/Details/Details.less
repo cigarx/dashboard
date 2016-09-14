@@ -1,26 +1,35 @@
 .queryOption {
-  margin: 0px 0px 16px 0px;
-  .labelNote{
-    margin: 0 10px;
-    font-size: 12px;
-    color: #666;
-    font-weight: bold;
+
+  .panel{
+    margin-bottom: 8px;
+    :global(.ant-calendar-picker){
+      width: 100px;
+    }
+    :global(.ant-checkbox-wrapper){
+      margin-left: 10px;
+    }
+    .note_text {
+      margin: 0 8px;
+    }
+    .select{
+      width: 120px;
+    }
   }
-  :global(.ant-calendar-picker){
-    width: 100px;
-  }
-  .note_text {
-    margin: 0 8px;
-  }
-  .select{
-    width: 120px;
-  }
+
   .queryKey{
     margin: 8px 0px 8px 0px;
     :global(.ant-input) {
       width: 120px;
       margin: 0 8px 8px 0;
     }
+
+  }
+
+  .labelNote{
+    margin: 0 10px;
+    font-size: 12px;
+    color: #666;
+    font-weight: bold;
   }
 
 }

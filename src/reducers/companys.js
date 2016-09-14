@@ -11,9 +11,9 @@ const companyEntity = {
   loading: false,
   queryOptions: {
     byDate: new Date(),
-    byIndustry:{
-      Industries:[],
-      industry: "all",
+    byType:{
+      types:[],
+      type: "all",
       loading:false,
     },
     byPage: {
@@ -24,7 +24,8 @@ const companyEntity = {
     keyword:"",
     sorter : {
 
-    }
+    },
+    isImportant:false
   },
   LineData:{
     data:[],
@@ -43,27 +44,33 @@ const company = handleActions({
     }, state);
     return u.updateIn('queryOptions.byPage.total', action.total,result);
   },
-  ['company/queryOpt/set/industrys'](state) {
-    return u.updateIn('queryOptions.byIndustry.loading', true, state);
+  ['company/queryOpt/set/types'](state) {
+    return u.updateIn('queryOptions.byType.loading', true, state);
   },
-  ['company/queryOpt/set/industrys/success'](state, action) {
-    const result = u.updateIn('queryOptions.byIndustry.loading', false, state);
-    return u.updateIn('queryOptions.byIndustry.Industries', action.payload , result);
+  ['company/queryOpt/set/types/success'](state, action) {
+    const result = u.updateIn('queryOptions.byType.loading', false, state);
+    return u.updateIn('queryOptions.byType.types', action.payload , result);
   },
   ['company/queryOpt/set/startDate'](state,action){
     return u.updateIn('queryOptions.byDate',action.payload,state);
   },
-  ['company/queryOpt/set/industry'](state,action){
-    return u.updateIn('queryOptions.byIndustry.industry',action.payload,state);
+  ['company/queryOpt/set/type'](state,action){
+    return u.updateIn('queryOptions.byType.type',action.payload,state);
   },
   ['company/queryOpt/set/currentPage'](state,action){
     return u.updateIn('queryOptions.byPage.current', action.payload,state);
+  },
+  ['company/queryOpt/set/pageSize'](state,action){
+    return u.updateIn('queryOptions.byPage.pageSize', action.payload,state);
   },
   ['company/queryOpt/set/keyword'](state,action){
     return u.updateIn('queryOptions.keyword', action.payload,state);
   },
   ['company/queryOpt/set/sorter'](state,action){
     return u.updateIn('queryOptions.sorter', action.payload,state);
+  },
+  ['company/queryOpt/set/isImportant'](state,action){
+    return u.updateIn('queryOptions.isImportant', action.payload,state);
   },
   ['company/get/linedata'](state) {
     return u.updateIn('LineData.loading', true, state);

@@ -6,8 +6,8 @@ const chartControl = {
     return xFetch(`${rootUrl}/api/report/mapdata/`, {method: 'GET'})
   },
 
-  getGroupDaily : async (groupId) => {
-    return xFetch(`${rootUrl}/api/report/groupDaily/${groupId}`, {method: 'GET'})
+  getCompanyDaily : async (companyID) => {
+    return xFetch(`${rootUrl}/api/report/companyDaily/${companyID}`, {method: 'GET'})
   },
 
   installByIndustry : async () => {
@@ -25,7 +25,7 @@ const chartControl = {
   lineData : async (query) => {
     return xFetch(`${rootUrl}/api/report/linedata/?${query}`, {method: 'GET'})
   },
-  
+
 
 }
 export default chartControl;

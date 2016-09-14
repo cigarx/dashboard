@@ -1,60 +1,104 @@
 import React, {Component, PropTypes} from 'react';
-import {Table,Button} from 'antd';
+import {Table,Button,Icon,Tooltip} from 'antd';
 import styles from './Details.less';
 
-const DetailTable = ({loading, data, byPage, onShowChart,onExpandedRowsChange,onExpand , onTableChange}) => {
+const DetailTable = ({loading, data, byPage, onShowChart,onExpandedRowsChange,onExpand , onTableChange,onShowSizeChange}) => {
   const renderAction = (o, row, index) => {
     return (
       <Button type="primary" size="small" onClick={onShowChart.bind(this, o)}>显示图表</Button>
     );
   };
 
+  const renderImportant = (o, row, index) =>{
+      // console.log(o, row, index);
+      if(row.important){
+        return (<Icon type="check-circle" style={{ color: '#60BE29' }}/>)
+      }
+  }
+
+  const renderText = (o, row, index) =>{
+      if(row.name.length > 15){
+        return (
+          <Tooltip placement="bottom" title={row.name}>
+            <span>{row.name.substr(0,14)+ "..."}</span>
+          </Tooltip>
+        )
+      }
+      else {
+        return (<span>{row.name}</span>)
+      }
+
+  }
+
+
   const columns = [
     {
       title: '企业名称',
       dataIndex: 'name',
-      key: 'name'
+      key: 'name',
+      render : renderText,
+    },
+    {
+      title: '区域',
+      dataIndex: 'region',
+      key: 'region'
     }, {
       title: '行业',
-      dataIndex: 'industry',
-      key: 'industry'
-    }, {
-      title: '订单数据',
-      dataIndex: 'buy_number',
-      key: 'buy_number',
-      sorter:true
-    }, {
+      dataIndex: 'type',
+      key: 'type'
+    },
+    {
+      title: '重点用户',
+      dataIndex: 'important',
+      key: 'important',
+      width:80,
+      render : renderImportant
+    },
+    {
       title: '统计时间',
-      dataIndex: 'byDate',
-      key: 'byDate'
-    }, {
+      dataIndex: 'bydate',
+      key: 'bydate',
+      width:80,
+    },{
+      title: '订单数据',
+      dataIndex: 'buy_total',
+      key: 'buy_total',
+      width:80,
+      sorter:true
+    },
+    {
       title: '实际安装量',
       dataIndex: 'install_total',
       key: 'install_total ',
+      width:100,
       sorter:true
     }, {
       title: '日活均值',
-      dataIndex: 'activity_avg',
-      key: 'activity_avg'
+      dataIndex: 'acitvity_avg',
+      width:80,
+      key: 'acitvity_avg'
     }, {
       title: '月活总量',
       dataIndex: 'activity_sum',
       key: 'activity_sum',
+      width:80,
       sorter:true
     }, {
       title: '安装率',
       dataIndex: 'install_rate',
       key: 'install_rate',
+      width:80,
       sorter:true
     }, {
       title: '使用率',
       dataIndex: 'user_rate',
       key: 'user_rate',
+      width:80,
       sorter:true
     }, {
       title: '操作',
       key: 'operation',
-      render: renderAction
+      render: renderAction,
     }
   ];
 
@@ -63,15 +107,17 @@ const DetailTable = ({loading, data, byPage, onShowChart,onExpandedRowsChange,on
   }
 
   const pagination = () => {
-    if (Number(byPage.pageSize) > Number(byPage.total)) {
+    if (byPage.pageSize > byPage.total) {
       return false
     }
     return {
-      total: Number(byPage.total),
+      total: byPage.total,
       defaultCurrent: 1,
-      current: Number(byPage.current),
-      pageSize: Number(byPage.pageSize),
-      showTotal: showTotal
+      current: byPage.current,
+      pageSize: byPage.pageSize,
+      showTotal: showTotal,
+      showSizeChanger: true,
+      onShowSizeChange:onShowSizeChange
     };
   }
 
@@ -79,7 +125,8 @@ const DetailTable = ({loading, data, byPage, onShowChart,onExpandedRowsChange,on
     <div>
       <Table loading={loading} onExpandedRowsChange={onExpandedRowsChange}
       onChange={onTableChange}
-      columns={columns}  onExpand={onExpand} dataSource={data} pagination={pagination()}/>
+      columns={columns}  onExpand={onExpand} dataSource={data} pagination={pagination()}
+      />
     </div>
   );
 };
@@ -93,6 +140,7 @@ DetailTable.propTypes = {
   onExpand : PropTypes.func.isRequired,
   loading:PropTypes.bool,
   onTableChange: PropTypes.func.isRequired,
+  onShowSizeChange: PropTypes.func.isRequired
 };
 
 export default DetailTable;

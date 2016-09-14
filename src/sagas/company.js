@@ -7,7 +7,7 @@ import {
   cancel
 } from 'redux-saga/effects';
 import {
-  getIndustry,
+  getType,
   companysByQuery,
   getLineDataByCompany
 } from '../services/company';
@@ -19,9 +19,7 @@ import {
 function* getLineData(...args) {
 
   const companyId = args[0].query;
-
   if(companyId){
-
     try {
       const {jsonResult} = yield call(getLineDataByCompany,companyId);
       console.log(jsonResult);
@@ -47,35 +45,43 @@ function* getCompanys(...args) {
   if(query && query.byDate){
     let year = query.byDate.getFullYear();
     let month = query.byDate.getMonth() + 1;
-    queryStr = queryStr + `&startDate=${year},${month}`
+    queryStr = queryStr + `&startDate=${year}-${month}`
   }
   if(query && query.byPage){
     let start = (query.byPage.current - 1) * query.byPage.pageSize ;
     let limit = query.byPage.pageSize;
     queryStr += `&start=${start}&limit=${limit}`
   }
-  if(query && query.byIndustry && query.byIndustry.industry){
-    let industry = query.byIndustry.industry;
-    queryStr += `&industry=${industry}`
+
+  if(query && query.byType && query.byType.type){
+    let type = query.byType.type;
+    queryStr += `&type=${type}`
   }
+
   if(query && query.sorter && query.sorter.order){
     if(query.sorter.order == 'descend'){
       queryStr +=`&order=descend`
     }
     queryStr += `&field=${query.sorter.field}`
   }
+
   if(query && query.keyword){
     let keyword = query.keyword;
     queryStr += `&keyword=${keyword}`
   }
-  
+  if(query && query.isImportant){
+    console.log("is important");
+    let isImportant = query.isImportant;
+    queryStr += `&important=true`
+  }
+
   try {
     const {jsonResult} = yield call(companysByQuery,queryStr);
     if (jsonResult.success) {
       yield put({
         type: 'company/get/companies/success',
-        payload: jsonResult.companylist,
-        total : jsonResult.byPage.total
+        payload: jsonResult.data,
+        total : jsonResult.length
       });
     }
   } catch (err) {
@@ -88,15 +94,15 @@ function* getCompanys(...args) {
 }
 
 
-function* getIndustrys() {
+function* getTypes() {
   try {
     const {
       jsonResult
-    } = yield call(getIndustry);
+    } = yield call(getType);
     if (jsonResult.success) {
       yield put({
-        type: 'company/queryOpt/set/industrys/success',
-        payload: jsonResult.industries,
+        type: 'company/queryOpt/set/types/success',
+        payload: jsonResult.types,
       });
     }
   } catch (err) {
@@ -112,8 +118,8 @@ function* watchCompanyGetByQuery() {
   yield takeLatest('company/get/companies', getCompanys)
 }
 
-function* watchIndustryGet() {
-  yield takeLatest('company/queryOpt/set/industrys', getIndustrys)
+function* watchTypeGet() {
+  yield takeLatest('company/queryOpt/set/types', getTypes)
 }
 
 function* watchGetLineData() {
@@ -122,12 +128,12 @@ function* watchGetLineData() {
 
 
 export default function*() {
-  yield fork(watchIndustryGet);
+  yield fork(watchTypeGet);
   yield fork(watchCompanyGetByQuery);
   yield fork(watchGetLineData);
 
   yield put({
-    type: 'company/queryOpt/set/industrys',
+    type: 'company/queryOpt/set/types',
   });
 
   yield put({

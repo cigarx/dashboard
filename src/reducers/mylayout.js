@@ -12,7 +12,7 @@ const mylayout = handleActions({
     return {...state , model:action.payload};
   },
 },{
-  collapse: true,
+  collapse: false,
   showChart:false,
   model : null
 });

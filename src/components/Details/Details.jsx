@@ -7,9 +7,9 @@ var u = require('updeep');
 
 import {connect} from 'react-redux';
 
-const Details = (props) => {
+const Details  = (props) => {
   const {list, loading, queryOptions, dispatch, mylayout,LineData} = props;
-  const {byDate, byPage , byIndustry} = queryOptions;
+  const {byDate, byPage , byType} = queryOptions;
   const model = mylayout.model;
 
   const onStartChange = (value) => {
@@ -26,11 +26,11 @@ const Details = (props) => {
 
   const onOptionChange = (value) => {
     const payload = value;
-    dispatch({type: 'company/queryOpt/set/industry', payload: payload});
+    dispatch({type: 'company/queryOpt/set/type', payload: payload});
     dispatch({type: 'company/queryOpt/set/currentPage', payload: 1});
     dispatch({
       type: 'company/get/companies',
-      query: u.updateIn('byIndustry.industry', payload, u.updateIn('byPage.current', 1, queryOptions))
+      query: u.updateIn('byType.type', payload, u.updateIn('byPage.current', 1, queryOptions))
     });
   }
 
@@ -39,7 +39,6 @@ const Details = (props) => {
   }
 
   const handleButtonClick = ()=>{
-    console.log(queryOptions);
     dispatch({
       type: 'company/get/companies',
       query:  u.updateIn('byPage.current', 1, queryOptions)
@@ -67,7 +66,6 @@ const Details = (props) => {
 
 
   const onTableChange = (pagination, filters, sorter) => {
-    console.log("onTableChange",pagination, filters, sorter );
     // 点击分页、筛选、排序时触发
     let payload = {}
     if(sorter.field){
@@ -76,25 +74,40 @@ const Details = (props) => {
         field: sorter.field
       }
     }
+    let query = u.updateIn('byPage.pageSize',pagination.pageSize, u.updateIn('byPage.current', pagination.current, queryOptions))
     dispatch({type: 'company/queryOpt/set/sorter', payload: payload});
     dispatch({type: 'company/queryOpt/set/currentPage', payload: pagination.current});
     dispatch({
       type: 'company/get/companies',
-      query: u.updateIn('sorter', payload, u.updateIn('byPage.current', pagination.current, queryOptions))
+      query: u.updateIn('sorter', payload, query)
     });
 
+  }
+
+  const handleImportant = (e) => {
+    dispatch({type: 'company/queryOpt/set/isImportant', payload: e.target.checked});
+    dispatch({
+      type: 'company/get/companies',
+      query: u.updateIn('isImportant', e.target.checked, u.updateIn('byPage.current', 1, queryOptions))
+    });
+  }
+
+  const onShowSizeChange = (current, pageSize) => {
+    dispatch({type: 'company/queryOpt/set/pageSize', payload:pageSize});
   }
 
   return (
     <div>
       <SearchOpt queryOptions={queryOptions} onStartChange={onStartChange}
         onOptionChange={onOptionChange} onInputChange={handleInputChange}
-        onButtonClick={handleButtonClick}/>
+        onButtonClick={handleButtonClick} onImportant = {handleImportant}/>
       <DetailTable loading={loading} data={list} byPage={byPage} onTableChange={onTableChange}
-      onShowChart={onShowChart} onExpandedRowsChange={onExpandedRowsChange} onExpand={onExpand}/>
+      onShowChart={onShowChart} onExpandedRowsChange={onExpandedRowsChange} onExpand={onExpand} onShowSizeChange={onShowSizeChange}/>
       <Modal title={model
         ? model.name
-        : "企业名称"} wrapClassName="vertical-center-modal" visible={mylayout.showChart}
+        : "企业名称"}
+        width = {980}
+        wrapClassName="vertical-center-modal" visible={mylayout.showChart}
         onOk={() => setModal2Visible(false)} onCancel={() => setModal2Visible(false)}>
         <LineChart title={"安装、使用情况汇总"} lineData = {LineData}/>
       </Modal>
@@ -108,7 +121,7 @@ const  _getPercent  = (value,total) => {
   if (isNaN(total) || total == 1) {
     return "-";
   }
-  return total <= 0 ? "0%" : (Math.round(value * 10000) / 100.00 + "%");
+  return  total == 0 ? "0%" : (Math.round(value / total * 10000) / 100.00 + "%");
 }
 
 const conver = (data) => {
@@ -117,16 +130,17 @@ const conver = (data) => {
       let bydate = item.year + '.' + item.month;
       let result =  {
          name: item.name,
-         id : item.company_id,
-         groupid:item.group_id,
-         industry: item.industry,
-         buy_number: item.buy_number == 1 ? "场地授权" : item.buy_number ,
-         byDate : bydate,
+         id : item.companyid,
+         region:item.region,
+         type: item.type,
+         buy_total: item.buy_total == 1 ? "场地授权" : item.buy_total ,
+         bydate : bydate,
+         important : item.important == 1,
          install_total : item.install_total,
-         activity_avg:item.activity_avg,
+         acitvity_avg:item.acitvity_avg,
          activity_sum:item.activity_sum,
-         install_rate:_getPercent(item.install_rate,item.buy_number),
-         user_rate:_getPercent(item.user_rate,item.buy_number),
+         install_rate:_getPercent(item.install_total,item.buy_total),
+         user_rate:_getPercent(item.activity_sum,item.buy_total),
        }
       return result;
     });

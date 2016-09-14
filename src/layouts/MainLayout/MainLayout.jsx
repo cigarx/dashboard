@@ -33,33 +33,35 @@ const MainLayout = (props) => {
               <span className={styles.nav_text}>概览</span>
             </Link>
           </Menu.Item>
-          <Menu.Item key="/details">
-            <Link to="/details"><Icon type="line-chart"/>
-              <span className={styles.nav_text}>分析</span>
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="/settings">
-            <Link to="/settings"><Icon type="setting"/>
-              <span className={styles.nav_text}>设置</span>
-            </Link>
-          </Menu.Item>
 
-          <Menu.Item key="/completed">
-            <Link to="/completed"><Icon type="check-circle" />
-              <span className={styles.nav_text}>未完成</span>
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="setting">
-            <Link to="/completed/3"><Icon type="info-circle-o" />
-              <span className={styles.nav_text}>测试项</span>
-            </Link>
-          </Menu.Item>
+          <SubMenu key="/details" title={<span className={styles.nav_text}><Icon type="line-chart"/>分析页面</span>}>
+              <Menu.Item key="/details">
+                <Link to="/details">
+                    <span className={styles.nav_text}>企业分析</span>
+                </Link>
+              </Menu.Item>
+
+              <Menu.Item key="/details/group">
+                <Link to="/details/group">
+                    <span className={styles.nav_text}>集团分析</span>
+                </Link>
+              </Menu.Item>
+              <Menu.Item key="3">版本分析</Menu.Item>
+              <Menu.Item key="4">跨月分析</Menu.Item>
+          </SubMenu>
+
+          <SubMenu key="/settings" title={<span className={styles.nav_text}><Icon type="setting"/>设置</span>}>
+              <Menu.Item key="/settings">
+                <Link to="/settings">
+                  <span className={styles.nav_text}>选项1</span>
+                </Link>
+              </Menu.Item>
+              <Menu.Item key="2">选项2</Menu.Item>
+              <Menu.Item key="3">选项3</Menu.Item>
+              <Menu.Item key="4">选项4</Menu.Item>
+          </SubMenu>
+
         </Menu>
-        <div className={styles.action} onClick={handleToggleSide.bind(this)}>
-          {mylayout.collapse
-            ? <Icon type="right"/>
-            : <Icon type="left"/>}
-        </div>
       </aside>
       <div className={styles.main}>
         <div className={styles.header}>
@@ -76,7 +78,7 @@ const MainLayout = (props) => {
           </div>
         </div>
         <div className={styles.footer}>
-          Ant Design 版权所有 © 2015 由金山办公软件技术部支持
+          Ant Design 版权所有 © 2016 由金山办公软件技术部支持
         </div>
       </div>
     </div>
