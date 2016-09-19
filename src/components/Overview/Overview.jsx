@@ -12,12 +12,8 @@ const {Panel} =  Collapse;
 const Overview = ({mapdata,InstallByIndustry,BuyByIndustry,SummarlData,LineData,dispatch}) => {
 
   const {nowdata,predata,loading,byData} = SummarlData;
-  let now_install,now_active,pre_install,pre_active,now_month,pre_month;
+  let now_month,pre_month;
   if(!loading){
-    now_install = Number(nowdata.install_sum);
-    now_active = Number(nowdata.activity_sum);
-    pre_install = Number(predata.install_sum);
-    pre_active = Number(predata.activity_sum);
     now_month = byData.getMonth() + 1;
     pre_month = byData.getMonth() == 0 ? 12 : byData.getMonth();
   }
@@ -42,7 +38,6 @@ const Overview = ({mapdata,InstallByIndustry,BuyByIndustry,SummarlData,LineData,
   return (
     <div className={styles.overview}>
     <Row>
-        <h1>2016-08</h1>
         <Tooltip title="以行业维度显示报活数据">
           <span className={styles.labelNote}>选择行业</span>
         </Tooltip>
@@ -64,13 +59,13 @@ const Overview = ({mapdata,InstallByIndustry,BuyByIndustry,SummarlData,LineData,
         <Col span={10}>
           <Row gutter={16} className={styles.card}>
             <Col span={8}>
-              <Card title="新增企业数">{pre_month}月 1780 家 <br/>{now_month}月 2850 家 </Card>
+              <Card title="报活企业数">{pre_month}月  {predata.company_num} 家 <br/>{now_month}月 {nowdata.company_num}家 </Card>
             </Col>
             <Col span={8}>
-              <Card title="月报活数">{pre_month}月 {pre_active} <br/>{now_month}月 {now_active} </Card>
+              <Card title="月报活数">{pre_month}月  {predata.activity_sum} <br/>{now_month}月 {nowdata.activity_sum} </Card>
             </Col>
             <Col span={8}>
-              <Card title="新增安装数">{pre_month}月 {pre_install} 个 <br/> {now_month}月 {now_install} 个</Card>
+              <Card title="新增安装数">{pre_month}月 {predata.install_sum} <br/> {now_month}月 {nowdata.install_sum}</Card>
             </Col>
           </Row>
           <Row gutter={16}>
@@ -194,8 +189,8 @@ function mapStateToProps({chartdata}) {
       loading:chartdata.BuyByIndustry.loading
     },
     SummarlData:{
-      nowdata: chartdata.SummarlData.nowdata[0],
-      predata: chartdata.SummarlData.predata[0],
+      nowdata: chartdata.SummarlData.nowdata,
+      predata: chartdata.SummarlData.predata,
       byData: chartdata.SummarlData.byDate,
       loading: chartdata.SummarlData.loading
     },

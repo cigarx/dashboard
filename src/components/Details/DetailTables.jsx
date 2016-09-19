@@ -5,7 +5,7 @@ import styles from './Details.less';
 const DetailTable = ({loading, data, byPage, onShowChart,onExpandedRowsChange,onExpand , onTableChange,onShowSizeChange}) => {
   const renderAction = (o, row, index) => {
     return (
-      <Button type="primary" size="small" onClick={onShowChart.bind(this, o)}>显示图表</Button>
+      <Button type="primary" size="small" onClick={onShowChart.bind(this, o)}>显示日报活</Button>
     );
   };
 

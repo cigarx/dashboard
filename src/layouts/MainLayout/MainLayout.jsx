@@ -41,24 +41,24 @@ const MainLayout = (props) => {
                 </Link>
               </Menu.Item>
 
-              <Menu.Item key="/details/group">
+              {/*<Menu.Item key="/details/group">
                 <Link to="/details/group">
                     <span className={styles.nav_text}>集团分析</span>
                 </Link>
               </Menu.Item>
               <Menu.Item key="3">版本分析</Menu.Item>
-              <Menu.Item key="4">跨月分析</Menu.Item>
+              <Menu.Item key="4">跨月分析</Menu.Item>*/}
           </SubMenu>
 
           <SubMenu key="/settings" title={<span className={styles.nav_text}><Icon type="setting"/>设置</span>}>
-              <Menu.Item key="/settings">
+              {/*<Menu.Item key="/settings">
                 <Link to="/settings">
                   <span className={styles.nav_text}>选项1</span>
                 </Link>
               </Menu.Item>
               <Menu.Item key="2">选项2</Menu.Item>
               <Menu.Item key="3">选项3</Menu.Item>
-              <Menu.Item key="4">选项4</Menu.Item>
+              <Menu.Item key="4">选项4</Menu.Item>*/}
           </SubMenu>
 
         </Menu>

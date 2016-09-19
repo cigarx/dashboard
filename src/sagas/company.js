@@ -65,6 +65,13 @@ function* getCompanys(...args) {
     queryStr += `&field=${query.sorter.field}`
   }
 
+  if(query && query.byRegion){
+    if( query.byRegion.length > 0){
+      console.log( query.byRegion);
+      queryStr += `&region=${query.byRegion.toString() }`
+    }
+  }
+
   if(query && query.keyword){
     let keyword = query.keyword;
     queryStr += `&keyword=${keyword}`

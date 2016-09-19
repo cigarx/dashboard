@@ -96,11 +96,33 @@ const Details  = (props) => {
     dispatch({type: 'company/queryOpt/set/pageSize', payload:pageSize});
   }
 
+  const onChangeRegion = (checkedValues) => {
+    dispatch({type: 'company/queryOpt/set/byRegion', payload:checkedValues});
+    dispatch({
+      type: 'company/get/companies',
+      query: u.updateIn('byRegion',checkedValues,  queryOptions)
+    });
+  }
+
+  const onClearQuery = ()=>{
+
+    dispatch({type: 'company/queryOpt/set/byRegion', payload:['华北区']});
+    dispatch({type: 'company/queryOpt/set/isImportant', payload: false});
+    dispatch({type: 'company/queryOpt/set/sorter', payload: {}});
+    dispatch({type: 'company/queryOpt/set/type', payload: "all"});
+    dispatch({type: 'company/queryOpt/set/startDate', payload:  new Date()});
+    dispatch({type: 'company/queryOpt/set/currentPage', payload: 1});
+    dispatch({type: 'company/queryOpt/set/keyword', payload: ""});
+    dispatch({
+      type: 'company/get/companies'
+    });
+  }
+
   return (
     <div>
       <SearchOpt queryOptions={queryOptions} onStartChange={onStartChange}
-        onOptionChange={onOptionChange} onInputChange={handleInputChange}
-        onButtonClick={handleButtonClick} onImportant = {handleImportant}/>
+        onOptionChange={onOptionChange} onInputChange={handleInputChange} onClearQuery = {onClearQuery}
+        onButtonClick={handleButtonClick} onImportant = {handleImportant} onChangeRegion = {onChangeRegion}/>
       <DetailTable loading={loading} data={list} byPage={byPage} onTableChange={onTableChange}
       onShowChart={onShowChart} onExpandedRowsChange={onExpandedRowsChange} onExpand={onExpand} onShowSizeChange={onShowSizeChange}/>
       <Modal title={model

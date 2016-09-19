@@ -11,6 +11,7 @@ const companyEntity = {
   loading: false,
   queryOptions: {
     byDate: new Date(),
+    byRegion: ['华北区'],
     byType:{
       types:[],
       type: "all",
@@ -22,9 +23,7 @@ const companyEntity = {
       pageSize:5
     },
     keyword:"",
-    sorter : {
-
-    },
+    sorter : { },
     isImportant:false
   },
   LineData:{
@@ -65,6 +64,9 @@ const company = handleActions({
   },
   ['company/queryOpt/set/keyword'](state,action){
     return u.updateIn('queryOptions.keyword', action.payload,state);
+  },
+  ['company/queryOpt/set/byRegion'](state, action) {
+    return u.updateIn('queryOptions.byRegion', action.payload,state);
   },
   ['company/queryOpt/set/sorter'](state,action){
     return u.updateIn('queryOptions.sorter', action.payload,state);
