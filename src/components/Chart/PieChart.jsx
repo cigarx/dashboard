@@ -1,20 +1,22 @@
 import React, { Component, PropTypes } from 'react';
 import ReactEcharts from 'echarts-for-react';
 
-const DemoCharts = ({chartData,title,name}) => {
-  let {data,loading} = chartData;
+const PieChart = ({chartData,title,name}) => {
+  let {dataName,data,loading,seriesName} = chartData;
+  const formatter = "{b} : {c} ({d}%)";
   const option = {
-    title : {
-        text: title,
-        x:'10%'
+    legend: {
+      orient: 'horizontal',
+      left: 'left',
+      data: dataName
     },
     tooltip : {
         trigger: 'item',
-        formatter: "{a} <br/>{b} : {c} ({d}%)"
+        formatter:formatter
     },
     series : [
         {
-            name: name,
+            name: seriesName,
             type: 'pie',
             radius : '55%',
             center: ['50%', '60%'],
@@ -31,12 +33,12 @@ const DemoCharts = ({chartData,title,name}) => {
   };
 
   return (<ReactEcharts option={option} showLoading={loading}  style={{
-    height: 200
+    height: 240
   }}/>);
 };
 
-DemoCharts.propTypes = {
+PieChart.propTypes = {
 
 };
 
-export default DemoCharts;
+export default PieChart;

@@ -3,12 +3,17 @@ import ReactEcharts from 'echarts-for-react';
 
 const LineChart = ({title,lineData}) => {
   const {day,install,active} = lineData.data
+  let install_type =  lineData.install_type || "line";
+  let activity_type = lineData.activity_type || "line";
   let option = {
         title: {
-            text:title
+            text:title,
+            x: 'center',
+            align: 'right'
         },
         legend: {
-          data:['安装量','报活量']
+          data:['安装量','报活量'],
+          x: 'left'
         },
         tooltip: {
             trigger: 'axis'
@@ -20,57 +25,38 @@ const LineChart = ({title,lineData}) => {
         },
         yAxis: [
           {
+            name: '安装量数据轴',
+            type: 'value'
+          },
+
+          {
             name: '报活量数据轴',
             type: 'value',
           },
-          {
-            name: '安装量数据轴',
-            type: 'value'
-          }
+
 
         ],
         series: [
             {
                 name:'安装量',
-                type:'line',
+                type:install_type,
                 data:install,
-                yAxisIndex:1,
-                markLine: {
-                    data: [
-                        {type: 'average', name: '平均值'},
-                        [
-                          {
-                              type: 'min'
-                          },
-                          {
-                              name: '最小值到最大值',
-                              type: 'max'
-                          }
-                      ],
-                    ]
-                }
+                barWidth:15,
             },
             {
                 name:'报活量',
-                type:'line',
+                type:activity_type,
                 data:active,
+                yAxisIndex:1,
                 markLine: {
                     data: [
-                        {type: 'average', name: '平均值'},
-                        [
-                          {
-                              type: 'min'
-                          },
-                          {
-                              name: '最小值到最大值',
-                              type: 'max'
-                          }
-                      ],
+                        {type: 'average', name: '平均值' }  ,
                     ]
                 }
             }
         ]
         };
+
 if(lineData.show){
   option = {...option,
       dataZoom: [

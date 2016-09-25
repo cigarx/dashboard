@@ -1,8 +1,9 @@
 import React, {Component, PropTypes} from 'react';
 import {Table,Button,Icon,Tooltip} from 'antd';
+import {Link} from 'react-router';
 import styles from './Details.less';
 
-const DetailTable = ({loading, data, byPage, onShowChart,onExpandedRowsChange,onExpand , onTableChange,onShowSizeChange}) => {
+const DetailTable = ({loading, data, byPage, onShowChart,onExpandedRowsChange,onExpand ,routing, onTableChange,onShowSizeChange}) => {
   const renderAction = (o, row, index) => {
     return (
       <Button type="primary" size="small" onClick={onShowChart.bind(this, o)}>显示日报活</Button>
@@ -17,17 +18,20 @@ const DetailTable = ({loading, data, byPage, onShowChart,onExpandedRowsChange,on
   }
 
   const renderText = (o, row, index) =>{
+      let company_name;
       if(row.name.length > 15){
-        return (
+        company_name = (
           <Tooltip placement="bottom" title={row.name}>
             <span>{row.name.substr(0,14)+ "..."}</span>
           </Tooltip>
         )
       }
-      else {
-        return (<span>{row.name}</span>)
-      }
 
+      else {
+        company_name =  (<span>{row.name}</span>)
+      }
+      let href = routing.location.pathname +"/" + row.id;
+      return <Link to={href} > {company_name} </Link>
   }
 
 
@@ -37,6 +41,11 @@ const DetailTable = ({loading, data, byPage, onShowChart,onExpandedRowsChange,on
       dataIndex: 'name',
       key: 'name',
       render : renderText,
+    },
+    {
+      title: '数据来源',
+      dataIndex: 'server_num',
+      key: 'serverinfo'
     },
     {
       title: '区域',
@@ -51,49 +60,59 @@ const DetailTable = ({loading, data, byPage, onShowChart,onExpandedRowsChange,on
       title: '重点用户',
       dataIndex: 'important',
       key: 'important',
-      width:80,
+      className: styles.text_center,
+      width:70,
       render : renderImportant
     },
     {
       title: '统计时间',
       dataIndex: 'bydate',
+      className: styles.text_center,
       key: 'bydate',
-      width:80,
+      width:70,
     },{
       title: '订单数据',
       dataIndex: 'buy_total',
       key: 'buy_total',
+      className: styles.text_right,
       width:80,
       sorter:true
     },
     {
-      title: '实际安装量',
+      title: '安装总量',
       dataIndex: 'install_total',
       key: 'install_total ',
-      width:100,
+      className: styles.text_right,
+      width:80,
       sorter:true
-    }, {
+    },
+    {
+      title: '本月安装量',
+      dataIndex: 'install_sum',
+      key: 'install_sum ',
+      className: styles.text_right,
+      width:95,
+      sorter:true
+    },
+     {
       title: '日活均值',
       dataIndex: 'acitvity_avg',
-      width:80,
+      width:70,
+      className: styles.text_right,
       key: 'acitvity_avg'
     }, {
       title: '月活总量',
       dataIndex: 'activity_sum',
       key: 'activity_sum',
-      width:80,
-      sorter:true
-    }, {
-      title: '安装率',
-      dataIndex: 'install_rate',
-      key: 'install_rate',
+      className: styles.text_right,
       width:80,
       sorter:true
     }, {
       title: '使用率',
       dataIndex: 'user_rate',
       key: 'user_rate',
-      width:80,
+      className: styles.text_right,
+      width:70,
       sorter:true
     }, {
       title: '操作',
@@ -140,7 +159,8 @@ DetailTable.propTypes = {
   onExpand : PropTypes.func.isRequired,
   loading:PropTypes.bool,
   onTableChange: PropTypes.func.isRequired,
-  onShowSizeChange: PropTypes.func.isRequired
+  onShowSizeChange: PropTypes.func.isRequired,
+  routing : PropTypes.object.isRequired,
 };
 
 export default DetailTable;

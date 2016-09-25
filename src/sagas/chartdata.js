@@ -1,15 +1,61 @@
 import { takeLatest } from 'redux-saga';
 import { take, call, put, fork, cancel } from 'redux-saga/effects';
-import { getMapdata,installByIndustry,buyforIndustry,summarlData,lineData} from '../services/chartdata';
+import {versionData,summarlData,lineData,toptenData} from '../services/chartdata';
 import { message } from 'antd';
 
-function* getMap() {
+function* getTopTenData(...args) {
+  const query = args[0].query;
+  let queryStr  = "";
+  if(query && query.date){
+    queryStr = queryStr + `&query=${query.date}`
+  }
+  if(query && query.type ){
+    if(query.type != "all"){
+       queryStr = queryStr + `&type=${query.type}`
+    }
+  }
+  if(query && query.order){
+    queryStr = queryStr + `&order=${query.order}`
+  }
+
   try {
-    const {jsonResult} = yield call(getMapdata);
-    if (jsonResult.mapdata) {
+    const {jsonResult} = yield call(toptenData,queryStr);
+    if (jsonResult.success) {
       yield put({
-        type: 'chart/get/salesMapdata/success',
-        payload: jsonResult.mapdata,
+        type: 'chart/get/toptenData/success',
+        payload: jsonResult.data,
+      });
+    }
+  } catch (err) {
+    message.error(err);
+    //yield put({
+    //  type: 'todos/get/failed',
+    //  err,
+    //});
+  }
+}
+
+function* getVersionData(...args) {
+  const query = args[0].query;
+  let queryStr  = "";
+  if(query && query.date){
+    queryStr = queryStr + `&query=${query.date}`
+  }
+  if(query && query.type ){
+    if(query.type != "all"){
+       queryStr = queryStr + `&type=${query.type}`
+    }
+  }
+  if(query && query.order){
+    queryStr = queryStr + `&order=${query.order}`
+  }
+
+  try {
+    const {jsonResult} = yield call(versionData,queryStr);
+    if (jsonResult.success) {
+      yield put({
+        type: 'chart/get/versionData/success',
+        payload: jsonResult.data,
       });
     }
   } catch (err) {
@@ -23,11 +69,14 @@ function* getMap() {
 
 function* getSummarlData(...args) {
   const query = args[0].query;
-  let queryStr = "";
-  if(query){
-    let year = query.getFullYear();
-    let month = query.getMonth() + 1;
-    queryStr = queryStr + `&Date=${year},${month}`
+  let queryStr  = "";
+  if(query && query.date){
+    queryStr = queryStr + `&query=${query.date}`
+  }
+  if(query && query.type ){
+    if(query.type != "all"){
+       queryStr = queryStr + `&type=${query.type}`
+    }
   }
   try {
     const {jsonResult} = yield call(summarlData,queryStr);
@@ -47,49 +96,16 @@ function* getSummarlData(...args) {
   }
 }
 
-function* getInstallByIndustry() {
-  try {
-    const {jsonResult} = yield call(installByIndustry);
-    if (jsonResult.success) {
-      yield put({
-        type: 'chart/get/InstallByIndustry/success',
-        payload: jsonResult.data,
-      });
-    }
-  } catch (err) {
-    message.error(err);
-    //yield put({
-    //  type: 'todos/get/failed',
-    //  err,
-    //});
-  }
-}
-
-function* getBuyByIndustry() {
-  try {
-    const {jsonResult} = yield call(buyforIndustry);
-    if (jsonResult.success) {
-      yield put({
-        type: 'chart/get/BuyByIndustry/success',
-        payload: jsonResult.data,
-      });
-    }
-  } catch (err) {
-    message.error(err);
-    //yield put({
-    //  type: 'todos/get/failed',
-    //  err,
-    //});
-  }
-}
-
 function* getLineData(...args) {
   const query = args[0].query;
   let queryStr = "";
-  if(query){
-    let year = query.getFullYear();
-    let month = query.getMonth() + 1;
-    queryStr = queryStr + `&Date=${year},${month}`
+  if(query && query.date){
+    queryStr = queryStr + `&query=${query.date}`
+  }
+  if(query && query.type ){
+    if(query.type != "all"){
+       queryStr = queryStr + `&type=${query.type}`
+    }
   }
   try {
     const {jsonResult} = yield call(lineData,queryStr);
@@ -109,47 +125,41 @@ function* getLineData(...args) {
 }
 
 
-function* watchGetMapData() {
-  yield takeLatest('chart/get/salesMapdata', getMap)
+function* watchVersionData() {
+  yield takeLatest('chart/get/versionData', getVersionData)
 }
 
 function* watchLineData() {
   yield takeLatest('chart/get/linedata', getLineData)
 }
 
-function* watchGetInstallByIndustry() {
-  yield takeLatest('chart/get/InstallByIndustry', getInstallByIndustry)
-}
-
-function* watchGetBuyByIndustry() {
-  yield takeLatest('chart/get/BuyByIndustry', getBuyByIndustry)
-}
-
 function* watchSummarlData() {
   yield takeLatest('chart/get/summarlData', getSummarlData)
 }
 
+function* watchTopTenData() {
+  yield takeLatest('chart/get/toptenData', getTopTenData)
+}
+
 
 export default function*() {
-  yield fork(watchGetMapData);
-  yield fork(watchGetInstallByIndustry);
-  yield fork(watchGetBuyByIndustry);
+  yield fork(watchVersionData);
   yield fork(watchSummarlData);
   yield fork(watchLineData);
+  yield fork(watchTopTenData);
 
-  yield put({
-    type: 'chart/get/salesMapdata',
-  });
-  yield put({
-    type: 'chart/get/InstallByIndustry',
-  });
-  yield put({
-    type: 'chart/get/BuyByIndustry',
-  });
   yield put({
     type: 'chart/get/summarlData',
   });
   yield put({
     type: 'chart/get/linedata',
   });
+  yield put({
+    type: 'chart/get/versionData',
+  });
+
+  yield put({
+    type: 'chart/get/toptenData',
+  });
+
 }
