@@ -4,7 +4,7 @@ import Todos from './Todos/Todos';
 
 const App = ({ location }) => {
   return (
-      <Todos location={location} />
+    <Todos location={location} />
   );
 };
 

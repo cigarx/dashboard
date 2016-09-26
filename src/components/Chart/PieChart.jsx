@@ -1,40 +1,42 @@
 import React, { Component, PropTypes } from 'react';
 import ReactEcharts from 'echarts-for-react';
 
-const PieChart = ({chartData,title,name}) => {
-  let {dataName,data,loading,seriesName} = chartData;
-  const formatter = "{b} : {c} ({d}%)";
+const PieChart = ({ chartData, title, name }) => {
+  const { dataName, data, loading, seriesName } = chartData;
+  const formatter = '{b} : {c} ({d}%)';
   const option = {
     legend: {
       orient: 'horizontal',
       left: 'left',
-      data: dataName
+      data: dataName,
     },
-    tooltip : {
-        trigger: 'item',
-        formatter:formatter
+    tooltip: {
+      trigger: 'item',
+      formatter,
     },
-    series : [
-        {
-            name: seriesName,
-            type: 'pie',
-            radius : '55%',
-            center: ['50%', '60%'],
-            data: data,
-            itemStyle: {
-                emphasis: {
-                    shadowBlur: 10,
-                    shadowOffsetX: 0,
-                    shadowColor: 'rgba(0, 0, 0, 0.5)'
-                }
-            }
-        }
-    ]
+    series: [
+      {
+        name: seriesName,
+        type: 'pie',
+        radius: '55%',
+        center: ['50%', '60%'],
+        data,
+        itemStyle: {
+          emphasis: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.5)',
+          },
+        },
+      },
+    ],
   };
 
-  return (<ReactEcharts option={option} showLoading={loading}  style={{
-    height: 240
-  }}/>);
+  return (<ReactEcharts
+    option={option} showLoading={loading} style={{
+      height: 240,
+    }}
+  />);
 };
 
 PieChart.propTypes = {

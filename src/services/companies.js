@@ -1,19 +1,17 @@
 import xFetch from './xFetch';
-
-import { rootUrl } from  './Constant'
+import { rootUrl } from './constant'
 
 const companiesControl = {
-  companysByQuery : async (queryParam) => {
-    return xFetch(`${rootUrl}/api/companys/?${queryParam}`, {method: 'GET'})
+  companysByQuery: async (queryParam) => {
+    return xFetch(`${rootUrl}/api/companys/?${queryParam}`, { method: 'GET' })
   },
-  getLineDataByCompany: async(companyid) =>{
-
-    return xFetch(`${rootUrl}/api/report/linedata/${companyid}`, {method: 'GET'})
+  getLineDataByCompany: async(companyid) => {
+    return xFetch(`${rootUrl}/api/report/linedata/${companyid}`, { method: 'GET' })
   },
 
   exportData: async(queryParam) => {
-    return xFetch(`${rootUrl}/api/companys/?${queryParam}`, {method: 'GET'})
-  }
+    return xFetch(`${rootUrl}/api/companys/?${queryParam}`, { method: 'GET' })
+  },
 }
 
 export default companiesControl;

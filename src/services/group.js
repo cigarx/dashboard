@@ -1,11 +1,11 @@
 import xFetch from './xFetch';
-import { rootUrl } from  './Constant'
+import { rootUrl } from './constant'
 
 const groupControl = {
 
-  groupDataByQuery : async (queryParam) => {
-    return xFetch(`${rootUrl}/api/groups/?${queryParam}`, {method: 'GET'})
-  }
+  groupDataByQuery: async (queryParam) => {
+    return xFetch(`${rootUrl}/api/groups/?${queryParam}`, { method: 'GET' })
+  },
 
 }
 

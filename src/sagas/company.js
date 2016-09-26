@@ -4,36 +4,34 @@ import {
   call,
   put,
   fork,
-  cancel
+  cancel,
 } from 'redux-saga/effects';
 import {
-  getInfo
+  getInfo,
 } from '../services/company';
 import {
-  message
+  message,
 } from 'antd';
 
 
-function* getCompanyInfo(...args){
+function* getCompanyInfo(...args) {
   const companyId = args[0].companyId;
-  console.log(companyId);
   try {
-    const {jsonResult} = yield call(getInfo,companyId);
-    if(jsonResult.success){
+    const { jsonResult } = yield call(getInfo, companyId);
+    if (jsonResult.success) {
       yield put({
         type: 'company/get/info/success',
         companyInfo: jsonResult.companyInfo,
-        orderInfo:jsonResult.orderInfo ,
-        snInfo:jsonResult.snInfo ,
+        orderInfo: jsonResult.orderInfo,
+        snInfo: jsonResult.snInfo,
       });
     }
-  }
-  catch(err){
-    message.error(err);
+  } catch (err) {
+    // message.error(err);
   }
 }
 
-function* watchGetInfo(){
+function* watchGetInfo() {
   yield takeLatest('company/get/info', getCompanyInfo)
 }
 

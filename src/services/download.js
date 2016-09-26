@@ -1,20 +1,19 @@
 import fetch from 'isomorphic-fetch';
 import cookie from 'js-cookie';
 
-var parseBlob = function (response) {
+const parseBlob = (response) => {
   return response.blob();
 };
 
-var processStatus = function (response) {// process status
+const processStatus = (response) => { // process status
   if (response.status === 200 || response.status === 0) {
     return Promise.resolve(response)
-  } else {
-    return Promise.reject(new Error('Error loading: ' + url))
   }
+  return Promise.reject(new Error('Error loading:'))
 };
 
 
-var downloadFile = function (url) {
+const downloadFile = (url) => {
   return fetch(url)
     .then(processStatus)
     .then(parseBlob);

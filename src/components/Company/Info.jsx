@@ -2,39 +2,38 @@ import React, { Component, PropTypes } from 'react';
 import CompanyInfo from './CompanyInfo';
 import OrderInfo from './OrderInfo';
 import SnInfo from './SnInfo'
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
 
 class CompanyDetails extends Component {
 
   componentDidMount() {
-    const {params,dispatch} = this.props;
-    console.log(this.props);
-    dispatch({type: 'company/get/info', companyId: params.id});
+    const { params, dispatch } = this.props;
+    dispatch({ type: 'company/get/info', companyId: params.id });
   }
 
   render() {
-    const {company} = this.props;
-    const {companyInfo,orderInfo,snInfo} = company;
+    const { company } = this.props;
+    const { companyInfo, orderInfo, snInfo } = company;
 
     const CompanyInfoProps = {
-      info : companyInfo
+      info: companyInfo,
     }
 
     const OrderInfoProps = {
-      info : orderInfo
+      info: orderInfo,
     }
 
     const SnInfoProps = {
-      info : snInfo
+      info: snInfo,
     }
 
-    return(
+    return (
       <div>
         <h3>{companyInfo.name} 详情</h3>
-        <CompanyInfo {...CompanyInfoProps}/>
-        <OrderInfo {...OrderInfoProps}/>
-        <SnInfo {...SnInfoProps}/>
+        <CompanyInfo {...CompanyInfoProps} />
+        <OrderInfo {...OrderInfoProps} />
+        <SnInfo {...SnInfoProps} />
       </div>
     );
   }
@@ -45,11 +44,9 @@ CompanyDetails.propTypes = {
 };
 
 
-
-
-function mapStateToProps({company}) {
+function mapStateToProps({ company }) {
   return {
-    company : company
+    company,
   }
 }
 

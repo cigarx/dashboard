@@ -1,10 +1,10 @@
-import React , {Component,PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 
-const CompanyInfo = ({info}) =>  {
-  console.log("CompanyInfo",info);
+const CompanyInfo = ({ info }) => {
+  // console.log('CompanyInfo', info);
   return (<div>
-      <span > 公司Info </span>
-    </div>)
+    <span> 公司Info </span>
+  </div>)
 }
 
 CompanyInfo.propTypes = {};

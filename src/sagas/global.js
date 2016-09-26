@@ -4,28 +4,28 @@ import {
   call,
   put,
   fork,
-  cancel
+  cancel,
 } from 'redux-saga/effects';
 
 import {
   getCompanyTypes,
   getCompanyProvinces,
   getCompanyCitys,
-  getCompanyRegion
+  getCompanyRegion,
 } from '../services/global';
 
 import {
-  message
+  message,
 } from 'antd';
 
 
 function* getTypes() {
   try {
-    const {jsonResult} = yield call(getCompanyTypes);
+    const { jsonResult } = yield call(getCompanyTypes);
     if (jsonResult.success) {
       yield put({
         type: 'global/company/types/success',
-        payload: jsonResult.data
+        payload: jsonResult.data,
       });
     }
   } catch (err) {
@@ -37,13 +37,13 @@ function* getTypes() {
   }
 }
 
-function* getRegion(){
+function* getRegion() {
   try {
-    const {jsonResult} = yield call(getCompanyRegion);
+    const { jsonResult } = yield call(getCompanyRegion);
     if (jsonResult.success) {
       yield put({
         type: 'global/company/regions/success',
-        payload: jsonResult.data
+        payload: jsonResult.data,
       });
     }
   } catch (err) {
@@ -53,16 +53,15 @@ function* getRegion(){
     //  err,
     //});
   }
-
 }
 
 function* getProvinces() {
   try {
-    const {jsonResult} = yield call(getCompanyProvinces);
+    const { jsonResult } = yield call(getCompanyProvinces);
     if (jsonResult.success) {
       yield put({
         type: 'global/company/provinces/success',
-        payload: jsonResult.data
+        payload: jsonResult.data,
       });
     }
   } catch (err) {
@@ -77,11 +76,11 @@ function* getProvinces() {
 function* getCitys(...args) {
   const province = args[0].query;
   try {
-    const {jsonResult} = yield call(getCompanyCitys,province);
+    const { jsonResult } = yield call(getCompanyCitys, province);
     if (jsonResult.success) {
       yield put({
         type: 'global/company/citys/success',
-        payload: jsonResult.data
+        payload: jsonResult.data,
       });
     }
   } catch (err) {
@@ -92,7 +91,6 @@ function* getCitys(...args) {
     //});
   }
 }
-
 
 
 function* watchGlobalTypes() {
@@ -107,9 +105,8 @@ function* watchGlobalCitys() {
   yield takeLatest('global/company/citys', getCitys)
 }
 
-function* watchGlobalRegions(){
+function* watchGlobalRegions() {
   yield takeLatest('global/company/regions', getRegion)
-
 }
 
 export default function*() {
@@ -129,6 +126,4 @@ export default function*() {
   yield put({
     type: 'global/company/regions',
   });
-
-
 }

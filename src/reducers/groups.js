@@ -1,6 +1,6 @@
 import { handleActions } from 'redux-actions';
 import { combineReducer } from 'redux';
-var u = require('updeep');
+const u = require('updeep');
 
 const groupEntity = {
   list: [],
@@ -12,33 +12,36 @@ const groupEntity = {
       endOpen: false,
     },
     byPage: {
-      current:0,
-      total:0,
-      pageSize:5
+      current: 0,
+      total: 0,
+      pageSize: 5,
     },
-    byIndustry:{
-      Industries:[],
-      industry: "all"
+    byIndustry: {
+      Industries: [],
+      industry: 'all',
     },
-    keyword:""
-  }
+    keyword: '',
+  },
 };
 
 const group = handleActions({
+    /*eslint no-useless-computed-key: "off"*/
   ['group/get/list'](state) {
     return u.updateIn('loading', true, state);
   },
   ['group/get/list/success'](state, action) {
     const result = u({
-      list:action.payload ,
+      list: action.payload,
       loading: false,
     }, state);
-    return u.updateIn('queryOptions.byIndustry.Industries', action.industryFilter,u.updateIn('queryOptions.byPage.total', action.total,result))
+    return u.updateIn('queryOptions.byIndustry.Industries',
+      action.industryFilter,
+      u.updateIn('queryOptions.byPage.total', action.total, result))
   },
   ['company/get/companies/failed'](state, action) {
     return u({
       err: action.err,
-      loading: false
+      loading: false,
     }, state);
   },
   ['queryOpt/set/startDate'](state, action) {
@@ -58,6 +61,6 @@ const group = handleActions({
   },
   ['queryOpt/set/currentPage'](state, action) {
     return u.updateIn('queryOptions.byPage.current', action.payload, state);
-  }
+  },
 }, groupEntity);
 export default group;

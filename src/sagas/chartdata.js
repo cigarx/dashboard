@@ -1,25 +1,25 @@
 import { takeLatest } from 'redux-saga';
 import { take, call, put, fork, cancel } from 'redux-saga/effects';
-import {versionData,summarlData,lineData,toptenData} from '../services/chartdata';
+import { versionData, summarlData, lineData, toptenData } from '../services/chartdata';
 import { message } from 'antd';
 
 function* getTopTenData(...args) {
   const query = args[0].query;
-  let queryStr  = "";
-  if(query && query.date){
-    queryStr = queryStr + `&query=${query.date}`
+  let queryStr = '';
+  if (query && query.date) {
+    queryStr += `&query=${query.date}`
   }
-  if(query && query.type ){
-    if(query.type != "all"){
-       queryStr = queryStr + `&type=${query.type}`
+  if (query && query.type) {
+    if (query.type !== 'all') {
+      queryStr += `&type=${query.type}`
     }
   }
-  if(query && query.order){
-    queryStr = queryStr + `&order=${query.order}`
+  if (query && query.order) {
+    queryStr += `&order=${query.order}`
   }
 
   try {
-    const {jsonResult} = yield call(toptenData,queryStr);
+    const { jsonResult } = yield call(toptenData, queryStr);
     if (jsonResult.success) {
       yield put({
         type: 'chart/get/toptenData/success',
@@ -37,21 +37,21 @@ function* getTopTenData(...args) {
 
 function* getVersionData(...args) {
   const query = args[0].query;
-  let queryStr  = "";
-  if(query && query.date){
-    queryStr = queryStr + `&query=${query.date}`
+  let queryStr = '';
+  if (query && query.date) {
+    queryStr += `&query=${query.date}`
   }
-  if(query && query.type ){
-    if(query.type != "all"){
-       queryStr = queryStr + `&type=${query.type}`
+  if (query && query.type) {
+    if (query.type !== 'all') {
+      queryStr += `&type=${query.type}`
     }
   }
-  if(query && query.order){
-    queryStr = queryStr + `&order=${query.order}`
+  if (query && query.order) {
+    queryStr += `&order=${query.order}`
   }
 
   try {
-    const {jsonResult} = yield call(versionData,queryStr);
+    const { jsonResult } = yield call(versionData, queryStr);
     if (jsonResult.success) {
       yield put({
         type: 'chart/get/versionData/success',
@@ -69,17 +69,18 @@ function* getVersionData(...args) {
 
 function* getSummarlData(...args) {
   const query = args[0].query;
-  let queryStr  = "";
-  if(query && query.date){
-    queryStr = queryStr + `&query=${query.date}`
+  let queryStr = '';
+  if (query && query.date) {
+    queryStr += `&query=${query.date}`
   }
-  if(query && query.type ){
-    if(query.type != "all"){
-       queryStr = queryStr + `&type=${query.type}`
+  if (query && query.type) {
+    if (query.type !== 'all') {
+      queryStr += `&type=${query.type}`
     }
   }
+
   try {
-    const {jsonResult} = yield call(summarlData,queryStr);
+    const { jsonResult } = yield call(summarlData, queryStr);
     if (jsonResult.success) {
       yield put({
         type: 'chart/get/summarlData/success',
@@ -98,17 +99,17 @@ function* getSummarlData(...args) {
 
 function* getLineData(...args) {
   const query = args[0].query;
-  let queryStr = "";
-  if(query && query.date){
-    queryStr = queryStr + `&query=${query.date}`
+  let queryStr = '';
+  if (query && query.date) {
+    queryStr += `&query=${query.date}`
   }
-  if(query && query.type ){
-    if(query.type != "all"){
-       queryStr = queryStr + `&type=${query.type}`
+  if (query && query.type) {
+    if (query.type !== 'all') {
+      queryStr += `&type=${query.type}`
     }
   }
   try {
-    const {jsonResult} = yield call(lineData,queryStr);
+    const { jsonResult } = yield call(lineData, queryStr);
     if (jsonResult.success) {
       yield put({
         type: 'chart/get/linedata/success',
@@ -161,5 +162,4 @@ export default function*() {
   yield put({
     type: 'chart/get/toptenData',
   });
-
 }

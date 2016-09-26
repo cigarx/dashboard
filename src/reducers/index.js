@@ -4,7 +4,8 @@ const context = require.context('./', false, /\.js$/);
 const keys = context.keys().filter(item => item !== './index.js');
 
 const reducers = keys.reduce((memo, key) => {
-  memo[key.match(/([^\/]+)\.js$/)[1]] = context(key);
-  return memo;
+  const result = memo;
+  result[key.match(/([^\/]+)\.js$/)[1]] = context(key);
+  return result;
 }, {});
 export default reducers;

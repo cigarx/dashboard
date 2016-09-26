@@ -1,10 +1,9 @@
 import xFetch from './xFetch';
-
-import { rootUrl } from  './Constant'
+import { rootUrl } from './constant'
 
 const companyControl = {
-  getInfo : async (companyid) => {
-    return xFetch(`${rootUrl}/api/company/info/${companyid}`, {method: 'GET'})
+  getInfo: async (companyid) => {
+    return xFetch(`${rootUrl}/api/company/info/${companyid}`, { method: 'GET' })
   },
 }
 

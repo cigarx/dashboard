@@ -1,3 +1,4 @@
+
 import './index.html';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -26,6 +27,7 @@ const store = createStore(combineReducers({
 SagaManager.startSagas(sagaMiddleware);
 
 if (module.hot) {
+  /*eslint-disable */
   module.hot.accept('../reducers', () => {
     const reducers = require('../reducers');
     const combinedReducers = combineReducers({ ...reducers, routing });
@@ -35,7 +37,9 @@ if (module.hot) {
     SagaManager.cancelSagas(store);
     require('../sagas/SagaManager').default.startSagas(sagaMiddleware);
   });
+  /*eslint-enable */
 }
+
 
 //////////////////////
 // Render
@@ -43,6 +47,7 @@ if (module.hot) {
 const history = syncHistoryWithStore(browserHistory, store);
 
 let render = () => {
+  /*eslint global-require: "off"*/
   const Routes = require('../routes/index');
   ReactDOM.render(
     <Provider store={store}>
@@ -53,6 +58,7 @@ let render = () => {
 
 if (module.hot) {
   const renderNormally = render;
+    /*eslint-disable */
   const renderException = (error) => {
     const RedBox = require('redbox-react');
     ReactDOM.render(<RedBox error={error} />, document.getElementById('root'));
@@ -61,13 +67,13 @@ if (module.hot) {
     try {
       renderNormally();
     } catch (error) {
-      console.error('error', error);
       renderException(error);
     }
   };
   module.hot.accept('../routes/index', () => {
     render();
   });
+  /*eslint-enable */
 }
 
 render();

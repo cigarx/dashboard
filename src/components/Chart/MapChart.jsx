@@ -1,19 +1,18 @@
-import React, {Component, PropTypes} from 'react';
+import React, { Component, PropTypes } from 'react';
 import ReactEcharts from 'echarts-for-react';
-require("echarts/map/js/china.js");
+require('echarts/map/js/china.js');
 
-const MapChart = ({mapData}) => {
-
-  const {data, keyvalue, loading} = mapData
+const MapChart = ({ mapData }) => {
+  const { data, keyvalue, loading } = mapData
   let option = {}
   if (!loading) {
     option = {
       title: {
         text: 'WPS 采购数据',
-        left: 'center'
+        left: 'center',
       },
       tooltip: {
-        trigger: 'item'
+        trigger: 'item',
       },
       visualMap: {
         min: keyvalue.min,
@@ -21,12 +20,12 @@ const MapChart = ({mapData}) => {
         left: 'left',
         top: 'bottom',
         text: [
-          '高', '低'
+          '高', '低',
         ],
         calculable: true,
         inRange: {
-          color:['lightskyblue','yellow', 'orangered']
-        }
+          color: ['lightskyblue', 'yellow', 'orangered'],
+        },
       },
       toolbox: {
         show: true,
@@ -35,27 +34,29 @@ const MapChart = ({mapData}) => {
         top: 'center',
         feature: {
           dataView: {
-            readOnly: false
+            readOnly: false,
           },
           restore: {},
-          saveAsImage: {}
-        }
+          saveAsImage: {},
+        },
       },
       series: [
         {
           name: '购买量',
           type: 'map',
           mapType: 'china',
-          data: data
-        }
-      ]
+          data,
+        },
+      ],
     };
   }
-  return (<ReactEcharts option={option} showLoading={loading} style={{height: '400px', width: '100%'}}  />);
+  return (<ReactEcharts
+    option={option} showLoading={loading} style={{ height: '400px', width: '100%' }}
+  />);
 };
 
 MapChart.propTypes = {
-  mapData: PropTypes.object.isRequired
+  mapData: PropTypes.object.isRequired,
 };
 
 export default MapChart;

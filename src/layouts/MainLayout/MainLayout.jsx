@@ -1,54 +1,46 @@
-import React, {Component, PropTypes} from 'react';
-import {Router, Route, IndexRoute, Link} from 'react-router';
+import React, { Component, PropTypes } from 'react';
+import { Router, Route, IndexRoute, Link } from 'react-router';
 import classnames from 'classnames';
-import {connect} from 'react-redux';
-import {Menu, Icon} from 'antd';
+import { connect } from 'react-redux';
+import { Menu, Icon } from 'antd';
 const SubMenu = Menu.SubMenu;
 import styles from './MainLayout.less';
 
 const MainLayout = (props) => {
-  const {children, mylayout, dispatch, location} = props;
+  const { children, mylayout, dispatch, location } = props;
   const handleToggleSide = () => {
-    dispatch({type: 'uioption/toggleaside'});
+    dispatch({ type: 'uioption/toggleaside' });
   };
 
   const collapseSytle = classnames({
     [styles.aside]: true,
-    [styles.aside_collapse]: mylayout.collapse
+    [styles.aside_collapse]: mylayout.collapse,
   });
 
-  const _linkRender = (href, name, paths) => {
-    return <Link to={href}>{name.props.children}</Link>
-  }
-
-  const _loctionPath = location.pathname;
-
-
+  const loctionPath = location.pathname;
 
   return (
     <div className={collapseSytle}>
       <aside className={styles.sider}>
         <div className={styles.logo}></div>
-        <Menu mode="inline" theme="dark" selectedKeys={[_loctionPath]}>
+        <Menu mode="inline" theme="dark" selectedKeys={[loctionPath]}>
           <Menu.Item key="/">
-            <Link to="/"><Icon type="laptop"/>
+            <Link to="/"><Icon type="laptop" />
               <span className={styles.nav_text}>概览</span>
             </Link>
           </Menu.Item>
-
-          <SubMenu key="/company" title={<span className={styles.nav_text}><Icon type="line-chart"/>分析页面</span>}>
-              <Menu.Item key="/company">
-                <Link to="/company">
-                    <span className={styles.nav_text}>按企业维度</span>
-                </Link>
-              </Menu.Item>
-              <Menu.Item key="/group">
-                <Link to="/group">
-                    <span className={styles.nav_text}>按集团维度</span>
-                </Link>
-              </Menu.Item>
-
-
+          {/*eslint max-len: ["error", 150]*/}
+          <SubMenu key="/company" title={<span className={styles.nav_text}><Icon type="line-chart" />分析页面</span>}>
+            <Menu.Item key="/company">
+              <Link to="/company">
+                <span className={styles.nav_text}>按企业维度</span>
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="/group">
+              <Link to="/group">
+                <span className={styles.nav_text}>按集团维度</span>
+              </Link>
+            </Menu.Item>
               {/*<Menu.Item key="/details/group">
                 <Link to="/details/group">
                     <span className={styles.nav_text}>集团分析</span>
@@ -58,7 +50,7 @@ const MainLayout = (props) => {
               <Menu.Item key="4">跨月分析</Menu.Item>*/}
           </SubMenu>
 
-          <SubMenu key="/settings" title={<span className={styles.nav_text}><Icon type="setting"/>设置</span>}>
+          <SubMenu key="/settings" title={<span className={styles.nav_text}><Icon type="setting" />设置</span>}>
               {/*<Menu.Item key="/settings">
                 <Link to="/settings">
                   <span className={styles.nav_text}>选项1</span>
@@ -69,7 +61,7 @@ const MainLayout = (props) => {
               <Menu.Item key="4">选项4</Menu.Item>*/}
           </SubMenu>
           <Menu.Item key="/testing">
-            <Link to="/testing"><Icon type="code"/>
+            <Link to="/testing"><Icon type="code" />
               <span className={styles.nav_text}>测试</span>
             </Link>
           </Menu.Item>
@@ -95,11 +87,11 @@ const MainLayout = (props) => {
 };
 
 MainLayout.propTypes = {
-  children: PropTypes.element.isRequired
+  children: PropTypes.element.isRequired,
 };
 
-function mapStateToProps({mylayout}) {
-  return {mylayout: mylayout}
+function mapStateToProps({ mylayout }) {
+  return { mylayout }
 }
 
 export default connect(mapStateToProps)(MainLayout);
