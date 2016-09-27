@@ -30,7 +30,7 @@ const MainLayout = (props) => {
             </Link>
           </Menu.Item>
           {/*eslint max-len: ["error", 150]*/}
-          <SubMenu key="/company" title={<span className={styles.nav_text}><Icon type="line-chart" />分析页面</span>}>
+          <SubMenu title={<span className={styles.nav_text}><Icon type="line-chart" />分析页面</span>}>
             <Menu.Item key="/company">
               <Link to="/company">
                 <span className={styles.nav_text}>按企业维度</span>
@@ -50,7 +50,7 @@ const MainLayout = (props) => {
               <Menu.Item key="4">跨月分析</Menu.Item>*/}
           </SubMenu>
 
-          <SubMenu key="/settings" title={<span className={styles.nav_text}><Icon type="setting" />设置</span>}>
+          <SubMenu title={<span className={styles.nav_text}><Icon type="setting" />设置</span>}>
               {/*<Menu.Item key="/settings">
                 <Link to="/settings">
                   <span className={styles.nav_text}>选项1</span>
@@ -79,7 +79,7 @@ const MainLayout = (props) => {
           </div>
         </div>
         <div className={styles.footer}>
-          Ant Design 版权所有 © 2016 由金山办公软件技术部支持
+          版权所有 © 2016 金山办公软件技术部
         </div>
       </div>
     </div>

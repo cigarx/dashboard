@@ -28,7 +28,7 @@ const chartEntity = {
   queryOption: {
     byDate: 'weekly',
     byType: 'all',
-    show: 'activity_sum',
+    show: 'install_sum',
   },
 
 };

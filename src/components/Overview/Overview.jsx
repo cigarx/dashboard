@@ -165,9 +165,9 @@ const Overview = ({
         {typechildren}
       </Select>
 
-      <RadioGroup defaultValue="weekly" onChange={onChangeDate}>
-        <RadioButton value="monthly">本月</RadioButton>
-        <RadioButton value="weekly">本周</RadioButton>
+      <RadioGroup defaultValue={byDate} onChange={onChangeDate}>
+        <RadioButton value="monthly">近 30 日</RadioButton>
+        <RadioButton value="weekly">近 7 日</RadioButton>
         <RadioButton value="daily">今日</RadioButton>
       </RadioGroup>
     </div>
@@ -282,7 +282,7 @@ const converLine = (line) => {
     return {
       day: dayData,
       install: installData,
-      active: dayData,
+      active: activeData,
     };
   }
   return {
@@ -298,7 +298,7 @@ function mapStateToProps({ chartdata, global }) {
     versionData: {
       data: versionConver(chartdata.versionData, chartdata.queryOption),
       loading: chartdata.versionData.loading,
-      seriesName: chartdata.queryOption.show === 'install_sum' ? '安装次数' : '报活次数',
+      seriesName: chartdata.queryOption.show === 'install_sum' ? '安装量' : '报活次数',
       dataName: versionName(chartdata.versionData),
     },
 
@@ -312,7 +312,7 @@ function mapStateToProps({ chartdata, global }) {
     TopTenData: {
       data: toptenConver(chartdata.TopTenData, chartdata.queryOption),
       loading: chartdata.TopTenData.loading,
-      seriesName: chartdata.queryOption.show === 'install_sum' ? '安装次数' : '报活次数',
+      seriesName: chartdata.queryOption.show === 'install_sum' ? '安装量' : '报活次数',
     },
 
     LineData: {

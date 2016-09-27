@@ -10,9 +10,9 @@ const CardGroup = ({ SummarlData, byDate }) => {
   const { nowdata, predata, loading, oldNumber } = SummarlData
   const convertCompare = (date) => {
     const constDate = {
-      weekly: '上周',
+      weekly: '7 日',
       daily: '昨日',
-      monthly: '上月',
+      monthly: '30 日',
     }
     return constDate[date]
   }
@@ -68,7 +68,7 @@ const CardGroup = ({ SummarlData, byDate }) => {
       number: nowdata.activity_sum,
       compare: compareStyle(nowdata.activity_sum, predata.activity_sum),
       compare_num: compareNum(nowdata.activity_sum, predata.activity_sum),
-      compare_title: `同比${convertCompare(byDate)}`,
+      compare_title: `${convertCompare(byDate)}同比`,
       oldnumber: oldNumber.activity_sum,
     }
 
@@ -78,7 +78,7 @@ const CardGroup = ({ SummarlData, byDate }) => {
       number: nowdata.company_num,
       compare: compareStyle(nowdata.company_num, predata.company_num),
       compare_num: compareNum(nowdata.company_num, predata.company_num),
-      compare_title: `同比${convertCompare(byDate)}`,
+      compare_title: `${convertCompare(byDate)}同比`,
       oldnumber: oldNumber.company_num,
     }
 
@@ -88,7 +88,7 @@ const CardGroup = ({ SummarlData, byDate }) => {
       number: nowdata.install_sum,
       compare: compareStyle(nowdata.install_sum, predata.install_sum),
       compare_num: compareNum(nowdata.install_sum, predata.install_sum),
-      compare_title: `同比${convertCompare(byDate)}`,
+      compare_title: `${convertCompare(byDate)}同比`,
       oldnumber: oldNumber.install_sum,
     }
   }

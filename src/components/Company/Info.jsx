@@ -2,6 +2,10 @@ import React, { Component, PropTypes } from 'react';
 import CompanyInfo from './CompanyInfo';
 import OrderInfo from './OrderInfo';
 import SnInfo from './SnInfo'
+import { Row, Col, Icon } from 'antd';
+import { Link } from 'react-router';
+import styles from './Info.less';
+
 import { connect } from 'react-redux';
 
 
@@ -28,10 +32,17 @@ class CompanyDetails extends Component {
       info: snInfo,
     }
 
+
     return (
       <div>
+        <Icon type="caret-circle-left" /><Link to="/company">返回</Link><br />
         <h3>{companyInfo.name} 详情</h3>
-        <CompanyInfo {...CompanyInfoProps} />
+        <Row>
+          <Col span={8}>
+            <CompanyInfo {...CompanyInfoProps} />
+          </Col>
+        </Row>
+
         <OrderInfo {...OrderInfoProps} />
         <SnInfo {...SnInfoProps} />
       </div>

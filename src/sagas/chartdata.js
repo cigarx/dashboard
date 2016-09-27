@@ -3,8 +3,7 @@ import { take, call, put, fork, cancel } from 'redux-saga/effects';
 import { versionData, summarlData, lineData, toptenData } from '../services/chartdata';
 import { message } from 'antd';
 
-function* getTopTenData(...args) {
-  const query = args[0].query;
+const parseQuery = (query) => {
   let queryStr = '';
   if (query && query.date) {
     queryStr += `&query=${query.date}`
@@ -17,9 +16,14 @@ function* getTopTenData(...args) {
   if (query && query.order) {
     queryStr += `&order=${query.order}`
   }
+  return queryStr;
+}
 
+
+function* getTopTenData(...args) {
+  const query = args[0].query;
   try {
-    const { jsonResult } = yield call(toptenData, queryStr);
+    const { jsonResult } = yield call(toptenData, parseQuery(query));
     if (jsonResult.success) {
       yield put({
         type: 'chart/get/toptenData/success',
@@ -37,21 +41,8 @@ function* getTopTenData(...args) {
 
 function* getVersionData(...args) {
   const query = args[0].query;
-  let queryStr = '';
-  if (query && query.date) {
-    queryStr += `&query=${query.date}`
-  }
-  if (query && query.type) {
-    if (query.type !== 'all') {
-      queryStr += `&type=${query.type}`
-    }
-  }
-  if (query && query.order) {
-    queryStr += `&order=${query.order}`
-  }
-
   try {
-    const { jsonResult } = yield call(versionData, queryStr);
+    const { jsonResult } = yield call(versionData, parseQuery(query));
     if (jsonResult.success) {
       yield put({
         type: 'chart/get/versionData/success',
@@ -69,18 +60,8 @@ function* getVersionData(...args) {
 
 function* getSummarlData(...args) {
   const query = args[0].query;
-  let queryStr = '';
-  if (query && query.date) {
-    queryStr += `&query=${query.date}`
-  }
-  if (query && query.type) {
-    if (query.type !== 'all') {
-      queryStr += `&type=${query.type}`
-    }
-  }
-
   try {
-    const { jsonResult } = yield call(summarlData, queryStr);
+    const { jsonResult } = yield call(summarlData, parseQuery(query));
     if (jsonResult.success) {
       yield put({
         type: 'chart/get/summarlData/success',
@@ -99,17 +80,8 @@ function* getSummarlData(...args) {
 
 function* getLineData(...args) {
   const query = args[0].query;
-  let queryStr = '';
-  if (query && query.date) {
-    queryStr += `&query=${query.date}`
-  }
-  if (query && query.type) {
-    if (query.type !== 'all') {
-      queryStr += `&type=${query.type}`
-    }
-  }
   try {
-    const { jsonResult } = yield call(lineData, queryStr);
+    const { jsonResult } = yield call(lineData, parseQuery(query));
     if (jsonResult.success) {
       yield put({
         type: 'chart/get/linedata/success',
