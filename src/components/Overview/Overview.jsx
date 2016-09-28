@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import ReactEcharts from 'echarts-for-react';
 import { Row, Col, Radio, Tooltip, Select } from 'antd';
 import LineChart from '../Chart/LineChart';
@@ -17,199 +17,202 @@ const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 const Option = Select.Option;
 
-const Overview = ({
-  versionData,
-  SummarlData,
-  LineData,
-  TopTenData,
-  dispatch,
-  global,
-  queryOption,
-  }) => {
-  const { nowdata, predata, loading } = SummarlData;
-  const { byDate, byType, show } = queryOption;
+class Overview extends React.Component {
 
-  const { typeList } = global;
-  let typechildren = [];
-  if (typeList && !typeList.loading) {
-    typechildren = typeList.types.map((item) => {
-      return (
-        <Option key={item.type}>
-          {item.type}
-        </Option>
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch({ type: 'chart/get/summarlData' });
+    dispatch({ type: 'chart/get/linedata' });
+    dispatch({ type: 'chart/get/versionData' });
+    dispatch({ type: 'chart/get/toptenData' });
+  }
+  render() {
+    const { versionData, SummarlData, LineData, TopTenData, dispatch, global, queryOption } = this.props;
+    const { nowdata, predata, loading } = SummarlData;
+    const { byDate, byType, show } = queryOption;
+
+    const { typeList } = global;
+    let typechildren = [];
+    if (typeList && !typeList.loading) {
+      typechildren = typeList.types.map((item) => {
+        return (
+          <Option key={item.type}>
+            {item.type}
+          </Option>
       )
-    });
-  }
-
-  const convertTitle = (date) => {
-    const constDate = {
-      weekly: '本周',
-      daily: '今日',
-      monthly: '本月',
+      });
     }
-    return constDate[date]
-  }
 
-
-  const convertType = (type) => {
-    if (type === 'all') {
-      return '所有行业'
+    const convertTitle = (date) => {
+      const constDate = {
+        weekly: '本周',
+        daily: '今日',
+        monthly: '本月',
+      }
+      return constDate[date]
     }
-    return type;
-  }
 
 
-  const onChangeDate = (e) => {
-    dispatch({ type: 'chart/queryOpt/set/date', payload: e.target.value });
-    dispatch({ type: 'chart/set/oldNumber', payload: nowdata });
-    dispatch({
-      type: 'chart/get/versionData',
-      query: {
-        date: e.target.value,
-        type: byType,
-        order: show,
-      },
-    });
+    const convertType = (type) => {
+      if (type === 'all') {
+        return '所有行业'
+      }
+      return type;
+    }
 
-    dispatch({
-      type: 'chart/get/toptenData',
-      query: {
-        date: e.target.value,
-        type: byType,
-        order: show,
-      },
-    });
 
-    dispatch({
-      type: 'chart/get/linedata',
-      query: {
-        date: e.target.value,
-        type: byType,
-      },
-    });
+    const onChangeDate = (e) => {
+      dispatch({ type: 'chart/queryOpt/set/date', payload: e.target.value });
+      dispatch({ type: 'chart/set/oldNumber', payload: nowdata });
+      dispatch({
+        type: 'chart/get/versionData',
+        query: {
+          date: e.target.value,
+          type: byType,
+          order: show,
+        },
+      });
 
-    dispatch({
-      type: 'chart/get/summarlData',
-      query: {
-        date: e.target.value,
-        type: byType,
-      },
-    });
-  }
+      dispatch({
+        type: 'chart/get/toptenData',
+        query: {
+          date: e.target.value,
+          type: byType,
+          order: show,
+        },
+      });
 
-  const onChangeOrder = (e) => {
-    dispatch({ type: 'chart/queryOpt/set/show', payload: e.target.value });
-    dispatch({
-      type: 'chart/get/versionData',
-      query: {
-        date: byDate,
-        type: byType,
-        order: e.target.value,
-      },
-    });
-    dispatch({
-      type: 'chart/get/toptenData',
-      query: {
-        date: byDate,
-        type: byType,
-        order: e.target.value,
-      },
-    });
-  }
+      dispatch({
+        type: 'chart/get/linedata',
+        query: {
+          date: e.target.value,
+          type: byType,
+        },
+      });
 
-  const onChangeType = (value) => {
-    dispatch({ type: 'chart/queryOpt/set/type', payload: value });
-    dispatch({ type: 'chart/set/oldNumber', payload: nowdata });
-    dispatch({
-      type: 'chart/get/versionData',
-      query: {
-        date: byDate,
-        type: value,
-        order: show,
-      },
-    });
-    dispatch({
-      type: 'chart/get/toptenData',
-      query: {
-        date: byDate,
-        type: value,
-        order: show,
-      },
-    });
-    dispatch({
-      type: 'chart/get/linedata',
-      query: {
-        date: byDate,
-        type: value,
-      },
-    });
-    dispatch({
-      type: 'chart/get/summarlData',
-      query: {
-        date: byDate,
-        type: value,
-      },
-    });
-  }
+      dispatch({
+        type: 'chart/get/summarlData',
+        query: {
+          date: e.target.value,
+          type: byType,
+        },
+      });
+    }
 
-  const summarlOption = (
-    <div>
-      <Tooltip title="以行业维度显示报活数据">
-        <span className={styles.typeText}>选择行业</span>
-      </Tooltip>
-      {/*eslint max-len: ["error", 150, 4]*/}
-      <Select defaultValue={byType} value={byType} className={styles.select} onChange={onChangeType}>
-        <Option key="all">
-          全部行业
-        </Option>
-        {typechildren}
-      </Select>
+    const onChangeOrder = (e) => {
+      dispatch({ type: 'chart/queryOpt/set/show', payload: e.target.value });
+      dispatch({
+        type: 'chart/get/versionData',
+        query: {
+          date: byDate,
+          type: byType,
+          order: e.target.value,
+        },
+      });
+      dispatch({
+        type: 'chart/get/toptenData',
+        query: {
+          date: byDate,
+          type: byType,
+          order: e.target.value,
+        },
+      });
+    }
 
-      <RadioGroup defaultValue={byDate} onChange={onChangeDate}>
-        <RadioButton value="monthly">近 30 日</RadioButton>
-        <RadioButton value="weekly">近 7 日</RadioButton>
-        <RadioButton value="daily">今日</RadioButton>
-      </RadioGroup>
-    </div>
+    const onChangeType = (value) => {
+      dispatch({ type: 'chart/queryOpt/set/type', payload: value });
+      dispatch({ type: 'chart/set/oldNumber', payload: nowdata });
+      dispatch({
+        type: 'chart/get/versionData',
+        query: {
+          date: byDate,
+          type: value,
+          order: show,
+        },
+      });
+      dispatch({
+        type: 'chart/get/toptenData',
+        query: {
+          date: byDate,
+          type: value,
+          order: show,
+        },
+      });
+      dispatch({
+        type: 'chart/get/linedata',
+        query: {
+          date: byDate,
+          type: value,
+        },
+      });
+      dispatch({
+        type: 'chart/get/summarlData',
+        query: {
+          date: byDate,
+          type: value,
+        },
+      });
+    }
+
+    const summarlOption = (
+      <div>
+        <Tooltip title="以行业维度显示报活数据">
+          <span className={styles.typeText}>选择行业</span>
+        </Tooltip>
+        {/*eslint max-len: ["error", 150, 4]*/}
+        <Select defaultValue={byType} value={byType} className={styles.select} onChange={onChangeType}>
+          <Option key="all">
+            全部行业
+          </Option>
+          {typechildren}
+        </Select>
+
+        <RadioGroup defaultValue={byDate} onChange={onChangeDate}>
+          <RadioButton value="monthly">近 30 日</RadioButton>
+          <RadioButton value="weekly">近 7 日</RadioButton>
+          <RadioButton value="daily">今日</RadioButton>
+        </RadioGroup>
+      </div>
   )
 
-  const versionOption = (
-    <RadioGroup defaultValue={show} onChange={onChangeOrder}>
-      <RadioButton value="install_sum">安装量</RadioButton>
-      <RadioButton value="activity_sum">报活次数</RadioButton>
-    </RadioGroup>
+    const versionOption = (
+      <RadioGroup defaultValue={show} onChange={onChangeOrder}>
+        <RadioButton value="install_sum">安装量</RadioButton>
+        <RadioButton value="activity_sum">报活次数</RadioButton>
+      </RadioGroup>
     )
-  const setTitle = (desc) => {
-    return `${convertTitle(byDate)}${desc} (${convertType(byType)}) `;
-  }
-  const setTitleByInstall = (desc) => {
-    const installDesc = show === 'install_sum' ? '安装次数' : '报活次数'
-    return `${convertTitle(byDate)}${installDesc} ${desc} (${convertType(byType)}) `;
-  }
+    const setTitle = (desc) => {
+      return `${convertTitle(byDate)}${desc} (${convertType(byType)}) `;
+    }
+    const setTitleByInstall = (desc) => {
+      const installDesc = show === 'install_sum' ? '安装次数' : '报活次数'
+      return `${convertTitle(byDate)}${installDesc} ${desc} (${convertType(byType)}) `;
+    }
 
-  return (
-    <div className={styles.overview}>
-      <Row gutter={16}>
-        <Col span={15}>
-          <Panel title={setTitle('统计汇总')} Options={summarlOption}>
-            <CardGroup SummarlData={SummarlData} byDate={byDate} />
-          </Panel>
-          <Panel title={setTitle('报活详情')}>
-            <LineChart lineData={LineData} />
-          </Panel>
-        </Col>
-        <Col span={9}>
-          <Panel title={setTitleByInstall('版本分布')} Options={versionOption}>
-            <PieChart chartData={versionData} />
-          </Panel>
-          <Panel title={setTitleByInstall(' Top 10')}>
-            <Rank TopTenData={TopTenData} />
-          </Panel>
-        </Col>
-      </Row>
-    </div>
-  );
-};
+    return (
+      <div className={styles.overview}>
+        <Row gutter={16}>
+          <Col span={15}>
+            <Panel title={setTitle('统计汇总')} Options={summarlOption}>
+              <CardGroup SummarlData={SummarlData} byDate={byDate} />
+            </Panel>
+            <Panel title={setTitle('报活详情')}>
+              <LineChart lineData={LineData} />
+            </Panel>
+          </Col>
+          <Col span={9}>
+            <Panel title={setTitleByInstall('版本分布')} Options={versionOption}>
+              <PieChart chartData={versionData} />
+            </Panel>
+            <Panel title={setTitleByInstall(' Top 10')}>
+              <Rank TopTenData={TopTenData} />
+            </Panel>
+          </Col>
+        </Row>
+      </div>
+    );
+  }
+}
 
 Overview.propTypes = {};
 

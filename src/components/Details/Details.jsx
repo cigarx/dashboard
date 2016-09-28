@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import DetailTable from './DetailTables';
 import SearchOpt from './SearchOpt';
 import LineChart from '../Chart/LineChart'
@@ -7,209 +7,217 @@ import { connect } from 'react-redux';
 
 const u = require('updeep');
 
-const Details = (props) => {
-  const { list, loading, queryOptions, dispatch, mylayout, LineData, routing, global } = props;
-  const { byDate, byPage, byType, byRegion } = queryOptions;
-  const model = mylayout.model;
 
-  const onStartChange = (value) => {
-    if (value !== null) {
+class Details extends React.Component {
+
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch({ type: 'company/get/companies' });
+  }
+  render() {
+    const { list, loading, queryOptions, dispatch, mylayout, LineData, routing, global } = this.props;
+    const { byDate, byPage, byType, byRegion } = queryOptions;
+    const model = mylayout.model;
+    const onStartChange = (value) => {
+      if (value !== null) {
+        const payload = value;
+        dispatch({ type: 'company/queryOpt/set/startDate', payload });
+        dispatch({ type: 'company/queryOpt/set/currentPage', payload: 1 });
+        dispatch({
+          type: 'company/get/companies',
+          query: u.updateIn('byDate', payload, u.updateIn('byPage.current', 1, queryOptions)),
+        });
+      }
+    };
+
+    const onOptionChange = (value) => {
       const payload = value;
-      dispatch({ type: 'company/queryOpt/set/startDate', payload });
+      dispatch({ type: 'company/queryOpt/set/type', payload });
       dispatch({ type: 'company/queryOpt/set/currentPage', payload: 1 });
       dispatch({
         type: 'company/get/companies',
-        query: u.updateIn('byDate', payload, u.updateIn('byPage.current', 1, queryOptions)),
+        query: u.updateIn('byType', payload, u.updateIn('byPage.current', 1, queryOptions)),
       });
     }
-  };
 
-  const onOptionChange = (value) => {
-    const payload = value;
-    dispatch({ type: 'company/queryOpt/set/type', payload });
-    dispatch({ type: 'company/queryOpt/set/currentPage', payload: 1 });
-    dispatch({
-      type: 'company/get/companies',
-      query: u.updateIn('byType', payload, u.updateIn('byPage.current', 1, queryOptions)),
-    });
-  }
-
-  const onProvinceChange = (value) => {
-    const payload = value;
-    dispatch({ type: 'company/queryOpt/set/province', payload });
-    dispatch({ type: 'global/company/citys', query: payload })
-    dispatch({ type: 'company/queryOpt/set/city', payload: 'all' });
-    dispatch({ type: 'company/queryOpt/set/currentPage', payload: 1 });
-    dispatch({
-      type: 'company/get/companies',
-      query: u.updateIn('byCity', 'all',
-                u.updateIn('byProvince', payload,
-                u.updateIn('byPage.current', 1, queryOptions))),
-    });
-  }
-
-  const onCityChange = (value) => {
-    const payload = value;
-    dispatch({ type: 'company/queryOpt/set/city', payload });
-    dispatch({ type: 'company/queryOpt/set/currentPage', payload: 1 });
-    dispatch({
-      type: 'company/get/companies',
-      query: u.updateIn('byCity', payload, u.updateIn('byPage.current', 1, queryOptions)),
-    });
-  }
-
-  const handleInputChange = (e) => {
-    dispatch({ type: 'company/queryOpt/set/keyword', payload: e.target.value });
-  }
-
-  const handleButtonClick = () => {
-    dispatch({
-      type: 'company/get/companies',
-      query: u.updateIn('byPage.current', 1, queryOptions),
-    });
-  }
-
-  const onShowChart = (value) => {
-    dispatch({ type: 'uioption/set/model', payload: value });
-    dispatch({ type: 'uioption/showChart', payload: true });
-    dispatch({ type: 'company/get/linedata', query: value.id });
-  }
-  const setModal2Visible = (value) => {
-    dispatch({ type: 'uioption/showChart', payload: value });
-  }
-
-  const onExpandedRowsChange = (value) => {
-    // console.log("onExpandedRowsChange");
-  }
-
-  const onExpand = (obj, record) => {
-    // console.log('onExpand');
-    // console.log(record);
-    // console.log(obj);
-  }
-
-
-  const onTableChange = (pagination, filters, sorter) => {
-    // 点击分页、筛选、排序时触发
-    let payload = {}
-    if (sorter.field) {
-      payload = {
-        order: sorter.order,
-        field: sorter.field,
-      }
+    const onProvinceChange = (value) => {
+      const payload = value;
+      dispatch({ type: 'company/queryOpt/set/province', payload });
+      dispatch({ type: 'global/company/citys', query: payload })
+      dispatch({ type: 'company/queryOpt/set/city', payload: 'all' });
+      dispatch({ type: 'company/queryOpt/set/currentPage', payload: 1 });
+      dispatch({
+        type: 'company/get/companies',
+        query: u.updateIn('byCity', 'all',
+                  u.updateIn('byProvince', payload,
+                  u.updateIn('byPage.current', 1, queryOptions))),
+      });
     }
-    const query = u.updateIn('byPage.pageSize',
-      pagination.pageSize, u.updateIn('byPage.current',
-      pagination.current, queryOptions))
-    dispatch({ type: 'company/queryOpt/set/sorter', payload });
-    dispatch({ type: 'company/queryOpt/set/currentPage', payload: pagination.current });
-    dispatch({
-      type: 'company/get/companies',
-      query: u.updateIn('sorter', payload, query),
-    });
-  }
 
-  const handleImportant = (e) => {
-    dispatch({ type: 'company/queryOpt/set/isImportant', payload: e.target.checked });
-    dispatch({
-      type: 'company/get/companies',
-      query: u.updateIn('isImportant',
-      e.target.checked, u.updateIn('byPage.current', 1, queryOptions)),
-    });
-  }
+    const onCityChange = (value) => {
+      const payload = value;
+      dispatch({ type: 'company/queryOpt/set/city', payload });
+      dispatch({ type: 'company/queryOpt/set/currentPage', payload: 1 });
+      dispatch({
+        type: 'company/get/companies',
+        query: u.updateIn('byCity', payload, u.updateIn('byPage.current', 1, queryOptions)),
+      });
+    }
 
-  const onShowSizeChange = (current, pageSize) => {
-    dispatch({ type: 'company/queryOpt/set/pageSize', payload: pageSize });
-  }
+    const handleInputChange = (e) => {
+      dispatch({ type: 'company/queryOpt/set/keyword', payload: e.target.value });
+    }
 
-  const onChangeRegion = (checkedValues) => {
-    dispatch({ type: 'company/queryOpt/set/byRegion', payload: checkedValues });
-    dispatch({
-      type: 'company/get/companies',
-      query: u.updateIn('byRegion', checkedValues, queryOptions),
-    });
-  }
+    const handleButtonClick = () => {
+      dispatch({
+        type: 'company/get/companies',
+        query: u.updateIn('byPage.current', 1, queryOptions),
+      });
+    }
 
-  const onClearQuery = () => {
-    dispatch({ type: 'company/queryOpt/set/byRegion', payload: [] });
-    dispatch({ type: 'company/queryOpt/set/isImportant', payload: false });
-    dispatch({ type: 'company/queryOpt/set/province', payload: 'all' });
-    dispatch({ type: 'company/queryOpt/set/city', payload: 'all' });
-    dispatch({ type: 'company/queryOpt/set/queryBy', payload: 'byRegion' });
-    dispatch({ type: 'company/queryOpt/set/sorter', payload: {} });
-    dispatch({ type: 'company/queryOpt/set/type', payload: 'all' });
-    dispatch({ type: 'company/queryOpt/set/startDate', payload: new Date() });
-    dispatch({ type: 'company/queryOpt/set/currentPage', payload: 1 });
-    dispatch({ type: 'company/queryOpt/set/keyword', payload: '' });
-    dispatch({
-      type: 'company/get/companies',
-    });
-  }
+    const onShowChart = (value) => {
+      dispatch({ type: 'uioption/set/model', payload: value });
+      dispatch({ type: 'uioption/showChart', payload: true });
+      dispatch({ type: 'company/get/linedata', query: value.id });
+    }
+    const setModal2Visible = (value) => {
+      dispatch({ type: 'uioption/showChart', payload: value });
+    }
 
-  const onExportData = () => {
-    dispatch({
-      type: 'company/exportData',
-      query: queryOptions,
-      title: '企业报活数据',
-    });
-  }
+    const onExpandedRowsChange = (value) => {
+      // console.log("onExpandedRowsChange");
+    }
 
-  const onQueryByChange = (e) => {
-    dispatch({ type: 'company/queryOpt/set/byRegion', payload: [] });
-    if (e.target.value === 'byRegion') {
+    const onExpand = (obj, record) => {
+      // console.log('onExpand');
+      // console.log(record);
+      // console.log(obj);
+    }
+
+
+    const onTableChange = (pagination, filters, sorter) => {
+      // 点击分页、筛选、排序时触发
+      let payload = {}
+      if (sorter.field) {
+        payload = {
+          order: sorter.order,
+          field: sorter.field,
+        }
+      }
+      const query = u.updateIn('byPage.pageSize',
+        pagination.pageSize, u.updateIn('byPage.current',
+        pagination.current, queryOptions))
+      dispatch({ type: 'company/queryOpt/set/sorter', payload });
+      dispatch({ type: 'company/queryOpt/set/currentPage', payload: pagination.current });
+      dispatch({
+        type: 'company/get/companies',
+        query: u.updateIn('sorter', payload, query),
+      });
+    }
+
+    const handleImportant = (e) => {
+      dispatch({ type: 'company/queryOpt/set/isImportant', payload: e.target.checked });
+      dispatch({
+        type: 'company/get/companies',
+        query: u.updateIn('isImportant',
+        e.target.checked, u.updateIn('byPage.current', 1, queryOptions)),
+      });
+    }
+
+    const onShowSizeChange = (current, pageSize) => {
+      dispatch({ type: 'company/queryOpt/set/pageSize', payload: pageSize });
+    }
+
+    const onChangeRegion = (checkedValues) => {
+      dispatch({ type: 'company/queryOpt/set/byRegion', payload: checkedValues });
+      dispatch({
+        type: 'company/get/companies',
+        query: u.updateIn('byRegion', checkedValues, queryOptions),
+      });
+    }
+
+    const onClearQuery = () => {
+      dispatch({ type: 'company/queryOpt/set/byRegion', payload: [] });
+      dispatch({ type: 'company/queryOpt/set/isImportant', payload: false });
       dispatch({ type: 'company/queryOpt/set/province', payload: 'all' });
       dispatch({ type: 'company/queryOpt/set/city', payload: 'all' });
+      dispatch({ type: 'company/queryOpt/set/queryBy', payload: 'byRegion' });
+      dispatch({ type: 'company/queryOpt/set/sorter', payload: {} });
+      dispatch({ type: 'company/queryOpt/set/type', payload: 'all' });
+      dispatch({ type: 'company/queryOpt/set/startDate', payload: new Date() });
+      dispatch({ type: 'company/queryOpt/set/currentPage', payload: 1 });
+      dispatch({ type: 'company/queryOpt/set/keyword', payload: '' });
+      dispatch({
+        type: 'company/get/companies',
+      });
     }
-    dispatch({ type: 'company/queryOpt/set/queryBy', payload: e.target.value });
+
+    const onExportData = () => {
+      dispatch({
+        type: 'company/exportData',
+        query: queryOptions,
+        title: '企业报活数据',
+      });
+    }
+
+    const onQueryByChange = (e) => {
+      dispatch({ type: 'company/queryOpt/set/byRegion', payload: [] });
+      if (e.target.value === 'byRegion') {
+        dispatch({ type: 'company/queryOpt/set/province', payload: 'all' });
+        dispatch({ type: 'company/queryOpt/set/city', payload: 'all' });
+      }
+      dispatch({ type: 'company/queryOpt/set/queryBy', payload: e.target.value });
+    }
+
+    const SearchOptProps = {
+      global,
+      queryOptions,
+      onStartChange,
+      onQueryByChange,
+      onOptionChange,
+      onInputChange: handleInputChange,
+      onClearQuery,
+      onExportData,
+      onButtonClick: handleButtonClick,
+      onImportant: handleImportant,
+      onChangeRegion,
+      onProvinceChange,
+      onCityChange,
+    };
+
+    const DetailTableProps = {
+      loading,
+      data: list,
+      byPage,
+      onTableChange,
+      onShowChart,
+      onExpandedRowsChange,
+      onExpand,
+      onShowSizeChange,
+      routing,
+    }
+
+    const ModalProps = {
+      title: model ? model.name : '企业名称',
+      width: 980,
+      wrapClassName: 'vertical-center-modal',
+      visible: mylayout.showChart,
+      onOk: () => setModal2Visible(false),
+      onCancel: () => setModal2Visible(false),
+    }
+
+    return (
+      <div>
+        <SearchOpt {...SearchOptProps} />
+        <DetailTable {...DetailTableProps} />
+        <Modal {...ModalProps}>
+          <LineChart title={"安装、使用情况汇总"} lineData={LineData} />
+        </Modal>
+      </div>
+    );
   }
+}
 
-  const SearchOptProps = {
-    global,
-    queryOptions,
-    onStartChange,
-    onQueryByChange,
-    onOptionChange,
-    onInputChange: handleInputChange,
-    onClearQuery,
-    onExportData,
-    onButtonClick: handleButtonClick,
-    onImportant: handleImportant,
-    onChangeRegion,
-    onProvinceChange,
-    onCityChange,
-  };
-
-  const DetailTableProps = {
-    loading,
-    data: list,
-    byPage,
-    onTableChange,
-    onShowChart,
-    onExpandedRowsChange,
-    onExpand,
-    onShowSizeChange,
-    routing,
-  }
-
-  const ModalProps = {
-    title: model ? model.name : '企业名称',
-    width: 980,
-    wrapClassName: 'vertical-center-modal',
-    visible: mylayout.showChart,
-    onOk: () => setModal2Visible(false),
-    onCancel: () => setModal2Visible(false),
-  }
-
-  return (
-    <div>
-      <SearchOpt {...SearchOptProps} />
-      <DetailTable {...DetailTableProps} />
-      <Modal {...ModalProps}>
-        <LineChart title={"安装、使用情况汇总"} lineData={LineData} />
-      </Modal>
-    </div>
-  );
-};
 
 Details.propTypes = {};
 

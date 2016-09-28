@@ -195,7 +195,7 @@ export default function*() {
   yield fork(watchGetLineData);
   yield fork(watchExportData);
 
-  yield put({
-    type: 'company/get/companies',
-  });
+  // yield put({
+  //   type: 'company/get/companies',
+  // });
 }

@@ -7,10 +7,10 @@ export default class Label extends React.Component {
   };
 
   componentWillMount() {
-    console.log(this.props);
+    // console.log(this.props);
   }
   shouldComponentUpdate(nextProps, nextState) {
-    console.log(nextProps, nextState);
+    // console.log(nextProps, nextState);
   }
   render() {
     return (<div>MyComponent</div>);

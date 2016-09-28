@@ -12,7 +12,9 @@
     "react/prop-types": [0],
     "arrow-body-style": [0],
     "react/prefer-stateless-function": [0],
-    "semi": [0]
+    "semi": [0],
+    "max-len":[0],
+    "jsx-first-prop-new-line" :[0]
   },
   "ecmaFeatures": {
     "experimentalObjectRestSpread": true

@@ -121,17 +121,17 @@ export default function*() {
   yield fork(watchLineData);
   yield fork(watchTopTenData);
 
-  yield put({
-    type: 'chart/get/summarlData',
-  });
-  yield put({
-    type: 'chart/get/linedata',
-  });
-  yield put({
-    type: 'chart/get/versionData',
-  });
-
-  yield put({
-    type: 'chart/get/toptenData',
-  });
+  // yield put({
+  //   type: 'chart/get/summarlData',
+  // });
+  // yield put({
+  //   type: 'chart/get/linedata',
+  // });
+  // yield put({
+  //   type: 'chart/get/versionData',
+  // });
+  //
+  // yield put({
+  //   type: 'chart/get/toptenData',
+  // });
 }

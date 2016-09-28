@@ -82,7 +82,6 @@ const chartdata = handleActions({
     return u.updateIn('SummarlData.oldNumber', action.payload, state);
   },
 
-
 }, chartEntity);
 
 export default chartdata;

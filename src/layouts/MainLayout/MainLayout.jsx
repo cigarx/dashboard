@@ -2,22 +2,42 @@ import React, { Component, PropTypes } from 'react';
 import { Router, Route, IndexRoute, Link } from 'react-router';
 import classnames from 'classnames';
 import { connect } from 'react-redux';
-import { Menu, Icon } from 'antd';
+import { Menu, Icon, Dropdown } from 'antd';
 const SubMenu = Menu.SubMenu;
+import { isLogin } from '../../utils/auth';
 import styles from './MainLayout.less';
 
 const MainLayout = (props) => {
-  const { children, mylayout, dispatch, location } = props;
+  const { children, mylayout, dispatch, location, auth } = props;
   const handleToggleSide = () => {
     dispatch({ type: 'uioption/toggleaside' });
   };
 
   const collapseSytle = classnames({
-    [styles.aside]: true,
+    [styles.aside]: isLogin,
     [styles.aside_collapse]: mylayout.collapse,
   });
 
+  const logoutShow = classnames({
+    [styles.logout_hide]: !auth.isAuthenticated,
+  })
+
   const loctionPath = location.pathname;
+
+  const logOut = () => {
+    dispatch({ type: 'auth/logout', data: { dispatch } });
+  }
+
+  const menu = (
+    <Menu>
+      <Menu.Item key="0">
+        <a href="#">用户中心</a>
+      </Menu.Item>
+      <Menu.Item key="1">
+        <a href="#" onClick={logOut}>退出</a>
+      </Menu.Item>
+    </Menu>
+  );
 
   return (
     <div className={collapseSytle}>
@@ -25,7 +45,7 @@ const MainLayout = (props) => {
         <div className={styles.logo}></div>
         <Menu mode="inline" theme="dark" selectedKeys={[loctionPath]}>
           <Menu.Item key="/">
-            <Link to="/"><Icon type="laptop" />
+            <Link to="/overview"><Icon type="laptop" />
               <span className={styles.nav_text}>概览</span>
             </Link>
           </Menu.Item>
@@ -68,6 +88,21 @@ const MainLayout = (props) => {
         </Menu>
       </aside>
       <div className={styles.main}>
+        <div className={styles.ceiling}>
+          <div className={styles.wrapper}>
+            <ul className={styles.right}>
+              <li className={logoutShow}>
+                <Dropdown overlay={menu} trigger={['click']}>
+                  <a className="ant-dropdown-link" href="#">
+                    administrator <Icon type="down" />
+                  </a>
+                </Dropdown>
+              </li>
+              <li>|</li>
+              <li>帮助中心</li>
+            </ul>
+          </div>
+        </div>
         <div className={styles.header}>
           <h1 className={styles.h1}>
             WPS 企业报活数据统计服务
@@ -90,8 +125,8 @@ MainLayout.propTypes = {
   children: PropTypes.element.isRequired,
 };
 
-function mapStateToProps({ mylayout }) {
-  return { mylayout }
+function mapStateToProps({ mylayout, auth }) {
+  return { mylayout, auth }
 }
 
 export default connect(mapStateToProps)(MainLayout);

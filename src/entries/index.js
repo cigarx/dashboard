@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 import { browserHistory } from 'react-router';
-import { syncHistoryWithStore, routerReducer as routing } from 'react-router-redux';
+import { syncHistoryWithStore, routerReducer as routing, routerMiddleware, push } from 'react-router-redux';
 import reducers from '../reducers/index';
 import SagaManager from '../sagas/SagaManager';
 import './index.less';
@@ -16,10 +16,13 @@ import './index.less';
 
 const sagaMiddleware = createSagaMiddleware();
 const initialState = {};
+const reduxrouterMW = routerMiddleware(browserHistory);
 const enhancer = compose(
-  applyMiddleware(sagaMiddleware),
+  applyMiddleware(sagaMiddleware, reduxrouterMW),
   window.devToolsExtension ? window.devToolsExtension() : f => f
 );
+
+
 const store = createStore(combineReducers({
   ...reducers, routing,
 }), initialState, enhancer);
